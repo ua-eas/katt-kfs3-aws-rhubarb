@@ -1,0 +1,14 @@
+16:52:49 (INFO) 
+16:52:49 (INFO) message
+16:52:50 (INFO) message fun message fun
+16:52:50 (INFO) Important info message
+16:52:51 (INFO) This is the first line.
+And this is the second.
+Third line's a charm.
+16:52:51 (INFO) This is an INFO line.
+And this is a blank line following it.
+16:52:51 (WARN) Important not-so-good situation
+16:52:52 (INFO) This is an WARN line.
+And this is a blank line following it.
+16:52:53 (ERROR) badwrong
+16:52:53 (FATAL) like graduate students
