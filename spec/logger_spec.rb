@@ -3,7 +3,16 @@ require_relative 'spec_helper'
 describe Rhubarb::BatchLogger, '.new' do
   before(:all) do
     @live_dir       = File.join(File.dirname(__FILE__), 'live')
+    @canon_dir      = File.join(File.dirname(__FILE__), 'canon')
+    @live_files     = File.join(@live_dir, '*')
+    @canon_files    = File.join(@canon_dir, '*')
     @stg_batch_home = File.join(@live_dir, 'uaf-stg')
+
+    # Delete everything in 'live'
+    FileUtils.rm_rf Dir.glob(@live_files)
+
+    # Copy from 'canon' to 'live'
+    FileUtils.cp_r Dir.glob(@canon_files), @live_dir
   end
 
   it 'should abandon ship without $BATCH_HOME' do
@@ -49,5 +58,32 @@ describe Rhubarb::BatchLogger, '#log' do
     #@logger.stub(:log4r_logger) { log4r_logger }
     @logger.log4r_logger.should_receive(:info).with('message')
     @logger.info 'message'
+  end
+end
+
+describe Rhubarb::BatchLogger, '#h1' do
+  before(:all) do
+    @live_dir       = File.join(File.dirname(__FILE__), 'live')
+    @stg_batch_home = File.join(@live_dir, 'uaf-stg')
+    Rhubarb::BatchLogger.stub(:batch_home).and_return(@stg_batch_home)
+    @logger = Rhubarb::BatchLogger.new('BAR')
+  end
+
+  it "should log H1's successfully" do
+    message = 'Big Fancy Header'
+    @logger.log4r_logger.should_receive(:info).with("# #{message}")
+    @logger.h1(message)
+  end
+
+  it "should log H2's successfully" do
+    message = 'Biggish Fancy Header'
+    @logger.log4r_logger.should_receive(:info).with("## #{message}")
+    @logger.h2(message)
+  end
+
+  it "should log H3's successfully" do
+    message = 'Meh Big Fancy Header'
+    @logger.log4r_logger.should_receive(:info).with("### #{message}")
+    @logger.h3(message)
   end
 end
