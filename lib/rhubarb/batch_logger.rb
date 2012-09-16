@@ -10,7 +10,7 @@ class Rhubarb::BatchLogger
     raise Rhubarb::InvalidBatchHomeError if not File.exist? batch_home
     batch_home_entries = Dir.new(batch_home).entries.reject {|e| e =~ /\.+|placeholder.txt/}
     raise Rhubarb::EmptyBatchHomeError if batch_home_entries.empty?
-    @job_stream_file = File.join(batch_home, 'logs', job_stream)
+    @job_stream_file = File.join(batch_home, 'logs', "#{job_stream}.log")
 
     @log4r_logger = Logger.new 'job_stream_logger'
     job_stream_file_outputter = FileOutputter.new('fileOutputter', :filename => @job_stream_file)

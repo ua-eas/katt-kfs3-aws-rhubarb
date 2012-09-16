@@ -13,3 +13,4 @@ module Rhubarb
 end
 
 require_relative 'rhubarb/batch_logger'
+require_relative 'rhubarb/batch_log_roller'

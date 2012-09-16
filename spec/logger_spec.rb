@@ -1,18 +1,10 @@
 require_relative 'spec_helper'
 
 describe Rhubarb::BatchLogger, '.new' do
+  include Helpers
+
   before(:all) do
-    @live_dir       = File.join(File.dirname(__FILE__), 'live')
-    @canon_dir      = File.join(File.dirname(__FILE__), 'canon')
-    @live_files     = File.join(@live_dir, '*')
-    @canon_files    = File.join(@canon_dir, '*')
-    @stg_batch_home = File.join(@live_dir, 'uaf-stg')
-
-    # Delete everything in 'live'
-    FileUtils.rm_rf Dir.glob(@live_files)
-
-    # Copy from 'canon' to 'live'
-    FileUtils.cp_r Dir.glob(@canon_files), @live_dir
+    cleanse_live
   end
 
   it 'should abandon ship without $BATCH_HOME' do
@@ -46,18 +38,10 @@ describe Rhubarb::BatchLogger, '.new' do
 end
 
 describe Rhubarb::BatchLogger, '#log' do
+  include Helpers
+
   before(:all) do
-    @live_dir       = File.join(File.dirname(__FILE__), 'live')
-    @canon_dir      = File.join(File.dirname(__FILE__), 'canon')
-    @live_files     = File.join(@live_dir, '*')
-    @canon_files    = File.join(@canon_dir, '*')
-    @stg_batch_home = File.join(@live_dir, 'uaf-stg')
-
-    # Delete everything in 'live'
-    FileUtils.rm_rf Dir.glob(@live_files)
-
-    # Copy from 'canon' to 'live'
-    FileUtils.cp_r Dir.glob(@canon_files), @live_dir
+    cleanse_live
 
     Rhubarb::BatchLogger.stub(:batch_home).and_return(@stg_batch_home)
     @logger = Rhubarb::BatchLogger.new('bar')
@@ -72,18 +56,10 @@ describe Rhubarb::BatchLogger, '#log' do
 end
 
 describe Rhubarb::BatchLogger, '#h1, #h2, #h3' do
+  include Helpers
+
   before(:all) do
-    @live_dir       = File.join(File.dirname(__FILE__), 'live')
-    @canon_dir      = File.join(File.dirname(__FILE__), 'canon')
-    @live_files     = File.join(@live_dir, '*')
-    @canon_files    = File.join(@canon_dir, '*')
-    @stg_batch_home = File.join(@live_dir, 'uaf-stg')
-
-    # Delete everything in 'live'
-    FileUtils.rm_rf Dir.glob(@live_files)
-
-    # Copy from 'canon' to 'live'
-    FileUtils.cp_r Dir.glob(@canon_files), @live_dir
+    cleanse_live
 
     Rhubarb::BatchLogger.stub(:batch_home).and_return(@stg_batch_home)
     @logger = Rhubarb::BatchLogger.new('bar')
@@ -119,9 +95,11 @@ describe Rhubarb::BatchLogger, '#h1, #h2, #h3' do
 end
 
 describe Rhubarb::BatchLogger, '#log4r_logger' do
+  include Helpers
+
   before(:all) do
-    @live_dir       = File.join(File.dirname(__FILE__), 'live')
-    @stg_batch_home = File.join(@live_dir, 'uaf-stg')
+    cleanse_live
+
     Rhubarb::BatchLogger.stub(:batch_home).and_return(@stg_batch_home)
     @logger = Rhubarb::BatchLogger.new('foo')
     @message01 = 'texty text text'
@@ -147,9 +125,11 @@ describe Rhubarb::BatchLogger, '#log4r_logger' do
 end
 
 describe Rhubarb::BatchLogger, '#stamp' do
+  include Helpers
+
   before(:all) do
-    @live_dir       = File.join(File.dirname(__FILE__), 'live')
-    @stg_batch_home = File.join(@live_dir, 'uaf-stg')
+    cleanse_live
+
     Rhubarb::BatchLogger.stub(:batch_home).and_return(@stg_batch_home)
     @logger = Rhubarb::BatchLogger.new('foo')
     @message01 = 'texty text text'
