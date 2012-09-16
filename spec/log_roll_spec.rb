@@ -65,5 +65,62 @@ describe Rhubarb::BatchLogRoller, '#roll' do
       File.directory?(File.join(@stg_batch_home, 'logs', 'foo')).should be_true
       File.directory?(File.join(@stg_batch_home, 'logs', 'bar')).should be_true
     end
+
+    it 'should keep log files correct' do
+      last_foo_log = Dir.glob(File.join(@stg_batch_home, 'logs', 'foo', '*.log')).last
+      lines = File.readlines(last_foo_log)
+      lines.last.should match /[0-9:]{8} \(INFO\) #{@message01}/
+
+      last_bar_log = Dir.glob(File.join(@stg_batch_home, 'logs', 'bar', '*.log')).last
+      lines = File.readlines(last_bar_log)
+      lines.last.should match /[0-9:]{8} \(INFO\) #{@message01}/
+    end
+  end
+
+  it 'should keep multiple log files, one for each day' do
+    day_zero = Time.local(2012, 9, 1, 12, 00, 00)
+    day_one = Time.local(2012, 9, 2, 12, 00, 00)
+    day_two = Time.local(2012, 9, 3, 12, 00, 00)
+
+    Timecop.travel(day_zero) do
+      @logger01.info @message01
+      @logger02.info @message01
+
+      @roller.roll
+    end
+
+    # We just pulled the rug out from under these kids, so we have to reinitialize
+    @logger01 = Rhubarb::BatchLogger.new('foo')
+    @logger02 = Rhubarb::BatchLogger.new('bar')
+
+    Timecop.travel(day_one) do
+      @logger01.info @message01
+      @logger02.info @message01
+
+      @roller.roll
+    end
+
+    # We just pulled the rug out from under these kids, so we have to reinitialize
+    @logger01 = Rhubarb::BatchLogger.new('foo')
+    @logger02 = Rhubarb::BatchLogger.new('bar')
+
+    Timecop.travel(day_two) do
+      @logger01.info @message01
+      @logger02.info @message01
+
+      @roller.roll
+    end
+
+    foo_archives = Dir.glob(File.join(@stg_batch_home, 'logs', 'foo', '*.log'))
+    foo_archives.should include_something_like /foo_2012-08-31.log$/
+    foo_archives.should include_something_like /foo_2012-09-01.log$/
+    foo_archives.should include_something_like /foo_2012-09-02.log$/
+    foo_archives.should_not include_something_like /foo_2012-09-03.log$/
+
+    bar_archives = Dir.glob(File.join(@stg_batch_home, 'logs', 'bar', '*.log'))
+    bar_archives.should include_something_like /bar_2012-08-31.log$/
+    bar_archives.should include_something_like /bar_2012-09-01.log$/
+    bar_archives.should include_something_like /bar_2012-09-02.log$/
+    bar_archives.should_not include_something_like /bar_2012-09-03.log$/
   end
 end

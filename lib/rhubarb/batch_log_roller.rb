@@ -30,7 +30,7 @@ class Rhubarb::BatchLogRoller
         Dir.mkdir archive_dir
       end
 
-      new_log_file = Time.now.strftime("#{base}_%Y-%m-%d.log")
+      new_log_file = (Time.now-24*60*60).strftime("#{base}_%Y-%m-%d.log")
       FileUtils.move log_file, File.join(archive_dir, new_log_file)
     end
   end
