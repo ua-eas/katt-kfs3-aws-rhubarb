@@ -1,6 +1,6 @@
 require_relative 'spec_helper'
 
-describe Rhubarb::BatchLogRoller, '.new' do
+describe Rhubarb::LogRoller, '.new' do
   include Helpers
 
   before(:all) do
@@ -8,41 +8,40 @@ describe Rhubarb::BatchLogRoller, '.new' do
   end
 
   it 'should abandon ship without $BATCH_HOME' do
-    Rhubarb::BatchLogRoller.stub(:batch_home).and_return(nil)
-    expect { Rhubarb::BatchLogRoller.new }.to raise_error(Rhubarb::MissingBatchHomeError)
+    Rhubarb.stub(:batch_home).and_return(nil)
+    expect { Rhubarb::LogRoller.new }.to raise_error(Rhubarb::MissingBatchHomeError)
   end
 
   it 'should abandon ship with an invalid $BATCH_HOME' do
     batch_home = File.join(@live_dir, 'uaf-fake')
-    Rhubarb::BatchLogRoller.stub(:batch_home).and_return(batch_home)
-    expect { Rhubarb::BatchLogRoller.new }.to raise_error(Rhubarb::InvalidBatchHomeError)
+    Rhubarb.stub(:batch_home).and_return(batch_home)
+    expect { Rhubarb::LogRoller.new }.to raise_error(Rhubarb::InvalidBatchHomeError)
   end
 
   it 'should abandon ship with an empty $BATCH_HOME directory' do
     batch_home = File.join(@live_dir, 'uaf-tst')
-    Rhubarb::BatchLogRoller.stub(:batch_home).and_return(batch_home)
-    expect { Rhubarb::BatchLogRoller.new }.to raise_error(Rhubarb::EmptyBatchHomeError)
+    Rhubarb.stub(:batch_home).and_return(batch_home)
+    expect { Rhubarb::LogRoller.new }.to raise_error(Rhubarb::EmptyBatchHomeError)
   end
 
   it 'should initialize successfully' do
-    Rhubarb::BatchLogRoller.stub(:batch_home).and_return(@stg_batch_home)
-    expect { Rhubarb::BatchLogRoller.new }.to_not raise_error
+    Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+    expect { Rhubarb::LogRoller.new }.to_not raise_error
   end
 end
 
-describe Rhubarb::BatchLogRoller, '#roll' do
+describe Rhubarb::LogRoller, '#roll' do
   include Helpers
 
   before(:each) do
     cleanse_live
 
-    Rhubarb::BatchLogger.stub(:batch_home).and_return(@stg_batch_home)
-    @logger01 = Rhubarb::BatchLogger.new('foo')
-    @logger02 = Rhubarb::BatchLogger.new('bar')
+    Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+    @logger01 = Rhubarb::Logger.new('foo')
+    @logger02 = Rhubarb::Logger.new('bar')
     @message01 = 'Ridiculously Interesting Message'
 
-    Rhubarb::BatchLogRoller.stub(:batch_home).and_return(@stg_batch_home)
-    @roller = Rhubarb::BatchLogRoller.new
+    @roller = Rhubarb::LogRoller.new
   end
 
   it 'should not blow up if there is nothing to roll' do
@@ -90,8 +89,8 @@ describe Rhubarb::BatchLogRoller, '#roll' do
     end
 
     # We just pulled the rug out from under these kids, so we have to reinitialize
-    @logger01 = Rhubarb::BatchLogger.new('foo')
-    @logger02 = Rhubarb::BatchLogger.new('bar')
+    @logger01 = Rhubarb::Logger.new('foo')
+    @logger02 = Rhubarb::Logger.new('bar')
 
     Timecop.travel(day_one) do
       @logger01.info @message01
@@ -101,8 +100,8 @@ describe Rhubarb::BatchLogRoller, '#roll' do
     end
 
     # We just pulled the rug out from under these kids, so we have to reinitialize
-    @logger01 = Rhubarb::BatchLogger.new('foo')
-    @logger02 = Rhubarb::BatchLogger.new('bar')
+    @logger01 = Rhubarb::Logger.new('foo')
+    @logger02 = Rhubarb::Logger.new('bar')
 
     Timecop.travel(day_two) do
       @logger01.info @message01

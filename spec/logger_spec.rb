@@ -1,6 +1,6 @@
 require_relative 'spec_helper'
 
-describe Rhubarb::BatchLogger, '.new' do
+describe Rhubarb::Logger, '.new' do
   include Helpers
 
   before(:all) do
@@ -8,43 +8,41 @@ describe Rhubarb::BatchLogger, '.new' do
   end
 
   it 'should abandon ship without $BATCH_HOME' do
-    Rhubarb::BatchLogger.stub(:batch_home).and_return(nil)
-    #Rhubarb::BatchLogger.class_eval { def batch_home; nil; end } # stub it
-    expect { Rhubarb::BatchLogger.new('foo') }.to raise_error(Rhubarb::MissingBatchHomeError)
+    Rhubarb.stub(:batch_home).and_return(nil)
+    expect { Rhubarb::Logger.new('foo') }.to raise_error(Rhubarb::MissingBatchHomeError)
   end
 
   it 'should abandon ship with an invalid $BATCH_HOME' do
     batch_home = File.join(@live_dir, 'uaf-fake')
-    Rhubarb::BatchLogger.stub(:batch_home).and_return(batch_home)
-    #Rhubarb::BatchLogger.class_eval { def batch_home; batch_home; end } # stub it
-    expect { Rhubarb::BatchLogger.new('foo') }.to raise_error(Rhubarb::InvalidBatchHomeError)
+    Rhubarb.stub(:batch_home).and_return(batch_home)
+    expect { Rhubarb::Logger.new('foo') }.to raise_error(Rhubarb::InvalidBatchHomeError)
   end
 
   it 'should abandon ship with an empty $BATCH_HOME directory' do
     batch_home = File.join(@live_dir, 'uaf-tst')
-    Rhubarb::BatchLogger.stub(:batch_home).and_return(batch_home)
-    expect { Rhubarb::BatchLogger.new('foo') }.to raise_error(Rhubarb::EmptyBatchHomeError)
+    Rhubarb.stub(:batch_home).and_return(batch_home)
+    expect { Rhubarb::Logger.new('foo') }.to raise_error(Rhubarb::EmptyBatchHomeError)
   end
 
   it 'should abandon ship with empty arguments' do
-    Rhubarb::BatchLogger.stub(:batch_home).and_return(@stg_batch_home)
-    expect { Rhubarb::BatchLogger.new }.to raise_error(ArgumentError)
+    Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+    expect { Rhubarb::Logger.new }.to raise_error(ArgumentError)
   end
 
   it 'should initialize successfully with one valid argument' do
-    Rhubarb::BatchLogger.stub(:batch_home).and_return(@stg_batch_home)
-    expect { Rhubarb::BatchLogger.new('foo') }.to_not raise_error
+    Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+    expect { Rhubarb::Logger.new('foo') }.to_not raise_error
   end
 end
 
-describe Rhubarb::BatchLogger, '#log' do
+describe Rhubarb::Logger, '#log' do
   include Helpers
 
   before(:all) do
     cleanse_live
 
-    Rhubarb::BatchLogger.stub(:batch_home).and_return(@stg_batch_home)
-    @logger = Rhubarb::BatchLogger.new('bar')
+    Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+    @logger = Rhubarb::Logger.new('bar')
   end
 
   it 'should log INFO successfully' do
@@ -55,14 +53,14 @@ describe Rhubarb::BatchLogger, '#log' do
   end
 end
 
-describe Rhubarb::BatchLogger, '#h1, #h2, #h3' do
+describe Rhubarb::Logger, '#h1, #h2, #h3' do
   include Helpers
 
   before(:all) do
     cleanse_live
 
-    Rhubarb::BatchLogger.stub(:batch_home).and_return(@stg_batch_home)
-    @logger = Rhubarb::BatchLogger.new('bar')
+    Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+    @logger = Rhubarb::Logger.new('bar')
     @message01 = 'Meh Big Fancy Header'
   end
 
@@ -94,14 +92,14 @@ describe Rhubarb::BatchLogger, '#h1, #h2, #h3' do
   end
 end
 
-describe Rhubarb::BatchLogger, '#log4r_logger' do
+describe Rhubarb::Logger, '#log4r_logger' do
   include Helpers
 
   before(:all) do
     cleanse_live
 
-    Rhubarb::BatchLogger.stub(:batch_home).and_return(@stg_batch_home)
-    @logger = Rhubarb::BatchLogger.new('foo')
+    Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+    @logger = Rhubarb::Logger.new('foo')
     @message01 = 'texty text text'
   end
 
@@ -124,14 +122,14 @@ describe Rhubarb::BatchLogger, '#log4r_logger' do
   end
 end
 
-describe Rhubarb::BatchLogger, '#stamp' do
+describe Rhubarb::Logger, '#stamp' do
   include Helpers
 
   before(:all) do
     cleanse_live
 
-    Rhubarb::BatchLogger.stub(:batch_home).and_return(@stg_batch_home)
-    @logger = Rhubarb::BatchLogger.new('foo')
+    Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+    @logger = Rhubarb::Logger.new('foo')
     @message01 = 'texty text text'
   end
 

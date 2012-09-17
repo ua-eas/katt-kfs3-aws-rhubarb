@@ -1,4 +1,4 @@
-class Rhubarb::BatchLogger
+class Rhubarb::Logger
   include Log4r
 
   attr_accessor :job_stream_file, :log4r_logger
@@ -6,10 +6,7 @@ class Rhubarb::BatchLogger
   delegate :debug, :info, :warn, :error, :fatal, to: :@log4r_logger
 
   def initialize(job_stream)
-    raise Rhubarb::MissingBatchHomeError if batch_home.nil?
-    raise Rhubarb::InvalidBatchHomeError if not File.exist? batch_home
-    batch_home_entries = Dir.new(batch_home).entries.reject {|e| e =~ /\.+|placeholder.txt/}
-    raise Rhubarb::EmptyBatchHomeError if batch_home_entries.empty?
+    Rhubarb.validate_batch_home
     @job_stream_file = File.join(batch_home, 'logs', "#{job_stream}.log")
 
     @log4r_logger = Logger.new 'job_stream_logger'
@@ -21,13 +18,7 @@ class Rhubarb::BatchLogger
   end
 
   def batch_home
-    @batch_home ||= Rhubarb::BatchLogger.batch_home
-  end
-
-  # This part was purely to allow me to mock the instance method. I don't like
-  # this but there it is.
-  def self.batch_home
-    ENV['BATCH_HOME']
+    @batch_home ||= Rhubarb.batch_home
   end
 
   def h1(message)
