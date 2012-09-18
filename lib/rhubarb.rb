@@ -28,6 +28,9 @@ module Rhubarb
   class MissingBatchHomeError < StandardError
   end
 
+  class MissingControlDirectoryError < StandardError
+  end
+
   class StatusFileTimeoutError < StandardError
   end
 

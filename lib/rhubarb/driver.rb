@@ -2,7 +2,9 @@ class Rhubarb::Driver
   # Namespace for several file utility methods for copying, moving, removing, etc.
   include FileUtils
 
-  attr_accessor :status_timeout, :status_sleep
+  attr_accessor :logger, :status_timeout, :status_sleep
+
+  delegate :debug, :info, :warn, :error, :fatal, to: :@logger
 
   def initialize(job_stream, job_name)
     Rhubarb.validate_batch_home
@@ -10,8 +12,22 @@ class Rhubarb::Driver
     @job_stream = job_stream
     @job_name = job_name
 
+    @logger = Rhubarb::Logger.new(@job_stream)
+    debug "Rhubarb::Driver initialized with job_stream = '#{job_stream}' and job_name = '#{job_name}'"
+
+    if not File.directory? Rhubarb.control_dir
+      error "'#{Rhubarb.control_dir}' directory does not exist, exiting."
+      raise Rhubarb::MissingControlDirectoryError
+    end
+
     @status_timeout = 3.hours
     @status_sleep = 5.seconds
+
+    debug "batch_home:        #{Rhubarb.batch_home.inspect}"
+    debug "control directory: #{Rhubarb.control_dir.inspect}"
+    debug "job_base:          #{job_base.inspect}"
+    debug "job_runfile:       #{job_runfile.inspect}"
+    debug "job_statusfile:    #{job_statusfile.inspect}"
   end
 
   def batch_home
@@ -22,6 +38,7 @@ class Rhubarb::Driver
     begin
       touch job_runfile
     rescue Errno::EACCES => error
+      error "Could not create run file: #{job_runfile.inspect}"
       raise Rhubarb::UnwritableControlDirectoryError
     end
     return job_runfile
@@ -44,6 +61,9 @@ class Rhubarb::Driver
     deadline = Time.now + status_timeout
     loop do
       if (Time.now > deadline)
+        # Consider chronic duration if we want to pretty print this:
+        # https://github.com/hpoydar/chronic_duration#usage
+        error "Runfile was never removed after #{status_timeout} seconds: #{job_runfile.inspect}"
         raise Rhubarb::StatusFileTimeoutError
       end
       # Move forward when the runfile disappears.
@@ -53,6 +73,7 @@ class Rhubarb::Driver
 
     loop do
       if (Time.now > deadline)
+        error "Statusfile was never found after #{status_timeout} seconds: #{job_statusfile.inspect}"
         raise Rhubarb::StatusFileTimeoutError
       end
       # Move forward when the statusfile appears.

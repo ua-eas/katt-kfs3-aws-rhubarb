@@ -8,6 +8,7 @@ module Helpers
     @canon_dir      = File.join(File.dirname(__FILE__), 'canon')
     @live_files     = File.join(@live_dir, '*')
     @canon_files    = File.join(@canon_dir, '*')
+    @cfg_batch_home = File.join(@live_dir, 'uaf-cfg')
     @stg_batch_home = File.join(@live_dir, 'uaf-stg')
     @trn_batch_home = File.join(@live_dir, 'uaf-trn')
 
