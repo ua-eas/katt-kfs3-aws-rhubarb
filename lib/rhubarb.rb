@@ -19,13 +19,19 @@ module Rhubarb
     raise Rhubarb::EmptyBatchHomeError if batch_home_entries.empty?
   end
 
-  class MissingBatchHomeError < StandardError
+  class EmptyBatchHomeError < StandardError
   end
 
   class InvalidBatchHomeError < StandardError
   end
 
-  class EmptyBatchHomeError < StandardError
+  class MissingBatchHomeError < StandardError
+  end
+
+  class StatusFileTimeoutError < StandardError
+  end
+
+  class UnwritableControlDirectoryError < StandardError
   end
 end
 

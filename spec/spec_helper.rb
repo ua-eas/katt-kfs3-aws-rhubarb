@@ -9,12 +9,16 @@ module Helpers
     @live_files     = File.join(@live_dir, '*')
     @canon_files    = File.join(@canon_dir, '*')
     @stg_batch_home = File.join(@live_dir, 'uaf-stg')
+    @trn_batch_home = File.join(@live_dir, 'uaf-trn')
 
     # Delete everything in 'live'
     FileUtils.rm_rf Dir.glob(@live_files)
 
     # Copy from 'canon' to 'live'
     FileUtils.cp_r Dir.glob(@canon_files), @live_dir
+
+    # For writable tests
+    FileUtils.chmod 0500, File.join(@live_dir, 'uaf-trn', 'control')
   end
 end
 
