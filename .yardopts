@@ -1,0 +1,4 @@
+--markup "markdown"
+--title "Rhubarb"
+lib/**/*.rb -
+README.md

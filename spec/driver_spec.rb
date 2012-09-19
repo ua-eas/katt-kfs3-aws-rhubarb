@@ -100,7 +100,7 @@ describe Rhubarb::Driver, '#drop_runfile' do
   end
 end
 
-describe Rhubarb::Driver, '#wait_for_status_file' do
+describe Rhubarb::Driver, '#wait_for_statusfile' do
   include Helpers
 
   before(:each) do
@@ -121,12 +121,22 @@ describe Rhubarb::Driver, '#wait_for_status_file' do
   end
 
   it 'should timeout and raise when no status file shows up' do
-    expect { @driver.wait_for_status_file }.to raise_error(Rhubarb::StatusFileTimeoutError)
+    expect { @driver.wait_for_statusfile }.to raise_error(Rhubarb::StatusFileTimeoutError)
+  end
+
+  it 'should DEBUG log when #wait_for_statusfile starts' do
+    begin
+      @driver.wait_for_statusfile
+    rescue
+    end
+
+    lines = File.readlines(@driver.logger.job_stream_file)
+    lines.should include_something_like /[0-9:]{8} \(DEBUG\) .*Waiting for/
   end
 
   it 'should ERROR log when no status file shows up' do
     begin
-      @driver.wait_for_status_file
+      @driver.wait_for_statusfile
     rescue
     end
 
@@ -136,19 +146,19 @@ describe Rhubarb::Driver, '#wait_for_status_file' do
 
   it 'should timeout and raise when the runfile doesn\'t leave, even if the status file shows up' do
     FileUtils.touch @driver.job_statusfile
-    expect { @driver.wait_for_status_file }.to raise_error(Rhubarb::StatusFileTimeoutError)
+    expect { @driver.wait_for_statusfile }.to raise_error(Rhubarb::StatusFileTimeoutError)
   end
 
   it 'should return the name of the statusfile when the runfile disappears and the statusfile appears _early_' do
     FileUtils.rm @driver.job_runfile
     FileUtils.touch @driver.job_statusfile
-    @driver.wait_for_status_file.should eq @driver.job_statusfile
+    @driver.wait_for_statusfile.should eq @driver.job_statusfile
   end
 
   it 'should return the name of the statusfile when the runfile disappears and the statusfile appears' do
     @driver.status_timeout = 6
     statusfile_waiter = Thread.new do
-      @driver.wait_for_status_file
+      @driver.wait_for_statusfile
     end
 
     sleep 2
@@ -159,5 +169,98 @@ describe Rhubarb::Driver, '#wait_for_status_file' do
 
     waiter_return = statusfile_waiter.value
     waiter_return.should eq @driver.job_statusfile
+  end
+
+  it 'should INFO log when the runfile disappears and the statusfile appears' do
+    @driver.status_timeout = 4
+    statusfile_waiter = Thread.new do
+      @driver.wait_for_statusfile
+    end
+
+    sleep 1.5
+    FileUtils.rm @driver.job_runfile
+
+    sleep 1.5
+    FileUtils.touch @driver.job_statusfile
+
+    statusfile_waiter.join
+
+    lines = File.readlines(@driver.logger.job_stream_file)
+    lines.should include_something_like /[0-9:]{8} \(INFO\) .*Statusfile found/
+  end
+end
+
+describe Rhubarb::Driver, '#status_line' do
+  include Helpers
+
+  before(:each) do
+    cleanse_live
+
+    Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+    @driver = Rhubarb::Driver.new('einvoice', 'clearCacheJob')
+  end
+
+  it 'should return nil if there is no Statusfile' do
+    @driver.status_line.should be nil
+  end
+
+  it 'should return nil if the Statusfile is empty' do
+    FileUtils.touch @driver.job_statusfile
+    @driver.status_line.should be nil
+  end
+
+  it 'should return the last line if the Statusfile is not empty' do
+    File.open(@driver.job_statusfile, 'w') { |handle| handle.write("Line One\nLine 2\nLine Trois") }
+    @driver.status_line.should eq "Line Trois"
+  end
+
+  it 'should return the last line if the Statusfile is not empty' do
+    File.open(@driver.job_statusfile, 'w') { |handle| handle.write("Line One\nLine 2\nLine Trois\n") }
+    @driver.status_line.should eq "Line Trois"
+  end
+end
+
+describe Rhubarb::Driver, '#succeeded?' do
+  include Helpers
+
+  before(:each) do
+    cleanse_live
+
+    Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+    @driver = Rhubarb::Driver.new('einvoice', 'clearCacheJob')
+  end
+
+  it 'should return nil if #status_line returns nil' do
+    @driver.stub(:status_line).and_return(nil)
+    @driver.succeeded?.should be nil
+  end
+
+  it 'should return true if #status_line returns "foo bar baz Succeeded bing bang bong"' do
+    @driver.stub(:status_line).and_return("foo bar baz Succeeded bing bang bong")
+    @driver.succeeded?.should be true
+  end
+
+  it 'should return false if #status_line returns "anything else here"' do
+    @driver.stub(:status_line).and_return("anything else here")
+    @driver.succeeded?.should be false
+  end
+end
+
+describe Rhubarb::Driver, '#drive' do
+  include Helpers
+
+  before(:each) do
+    cleanse_live
+
+    Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+    @driver = Rhubarb::Driver.new('einvoice', 'clearCacheJob')
+  end
+
+  it 'should return true if the job succeeded' do
+    @driver.stub(:drop_runfile).and_return(true)
+    @driver.stub(:wait_for_statusfile).and_return(true)
+    @driver.stub(:status_line).and_return('I guess I... Succeeded!')
+    @driver.stub(:succeeded?).and_return(true)
+    @driver.drive.should be true
   end
 end

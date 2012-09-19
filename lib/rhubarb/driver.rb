@@ -6,6 +6,13 @@ class Rhubarb::Driver
 
   delegate :debug, :info, :warn, :error, :fatal, to: :@logger
 
+  # Rhubarb::Driver must be initialized with a job stream and a job name. This
+  # means that an instance of the driver will only monitor the runfile and
+  # statusfile of one instance of one job.
+  #
+  # When initialized, Driver will first validate that {#batch\_home} is valid,
+  # via {Rhubarb.validate\_batch\_home}. Also, a {Rhubarb::Logger} is
+  # immediately created, accessible via {#logger}.
   def initialize(job_stream, job_name)
     Rhubarb.validate_batch_home
 
@@ -34,6 +41,12 @@ class Rhubarb::Driver
     @batch_home ||= Rhubarb.batch_home
   end
 
+  def drive
+    drop_runfile         # will raise if fail
+    wait_for_statusfile  # will raise if fail
+    succeeded?           # true or false
+  end
+
   def drop_runfile
     begin
       touch job_runfile
@@ -57,8 +70,9 @@ class Rhubarb::Driver
     @job_statusfile ||= File.join(Rhubarb.control_dir, 'history', "#{job_base}.status")
   end
 
-  def wait_for_status_file
+  def wait_for_statusfile
     deadline = Time.now + status_timeout
+    debug "Waiting for #{job_runfile.inspect} until #{deadline} (#{status_timeout} seconds)"
     loop do
       if (Time.now > deadline)
         # Consider chronic duration if we want to pretty print this:
@@ -82,6 +96,20 @@ class Rhubarb::Driver
     end
 
     # Huzzah status file
+    info "Statusfile found: #{job_statusfile}"
     job_statusfile
+  end
+
+  def status_line
+    return nil if not File.exist? job_statusfile
+
+    lines = File.readlines(job_statusfile)
+    return nil if lines.last.nil?
+    lines.last.chomp
+  end
+
+  def succeeded?
+    return nil if status_line.nil?
+    status_line.include? 'Succeeded'
   end
 end
