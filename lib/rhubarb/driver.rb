@@ -37,6 +37,7 @@ class Rhubarb::Driver
     debug "job_statusfile:    #{job_statusfile.inspect}"
   end
 
+  # Memoized getter for `@batch_home` (source is {Rhubarb.batch\_home})
   def batch_home
     @batch_home ||= Rhubarb.batch_home
   end
@@ -47,6 +48,7 @@ class Rhubarb::Driver
     succeeded?           # true or false
   end
 
+  # Drops {#job\_runfile} into the filesystem and returns the {#job\_runfile}
   def drop_runfile
     begin
       touch job_runfile
@@ -57,19 +59,74 @@ class Rhubarb::Driver
     return job_runfile
   end
 
-  # Equivalent to BATCH_FILE_BASE in BASIL
+  # Works as the base for "runfiles" and "statusfiles":
+  #
+  # If `@job_name` is `"clearCacheJob"`, then this method will return
+  # `"clearCacheJob_20120131120000"` if called at 12:00:00 on 2012-01-31. This
+  # method is memoized so all subsequent calls will return the same String,
+  # even if `Time.now` has changed.
+  #
+  # Equivalent to `BATCH_FILE_BASE` in BASIL
   def job_base
     @job_base ||= "#{@job_name}_#{Time.now.strftime('%Y%m%d%H%M%S')}"
   end
 
+  # Memoized getter for this job's runfile name, full path included
+  #
+  # If:
+  #
+  # * {#batch\_home} is `"/transaction-kfs/"` and
+  # * `@job_name` is `"clearCacheJob"` and
+  # * {#job\_base} was called at 12:00:00 on 2012-01-31
+  #
+  # then this method will return
+  # `"/transaction-kfs/control/clearCacheJob_20120131120000.run"`.
+  #
+  # @return [String] this job's runfile name
   def job_runfile
     @job_runfile ||= File.join(Rhubarb.control_dir, "#{job_base}.run")
   end
 
+  # Memoized getter for this job's statusfile name, full path included
+  #
+  # If:
+  #
+  # * {#batch\_home} is `"/transaction-kfs/"` and
+  # * `@job_name` is `"clearCacheJob"` and
+  # * {#job\_base} was called at 12:00:00 on 2012-01-31
+  #
+  # then this method will return
+  # `"/transaction-kfs/control/history/clearCacheJob_20120131120000.status"`.
+  #
+  # @return [String] this job's statusfile name
   def job_statusfile
     @job_statusfile ||= File.join(Rhubarb.control_dir, 'history', "#{job_base}.status")
   end
 
+  # @return [String] the last line in the {#job\_statusfile}
+  # @return nil if {#job\_statusfile} does not exist in the filesystem
+  def status_line
+    return nil if not File.exist? job_statusfile
+
+    lines = File.readlines(job_statusfile)
+    return nil if lines.last.nil?
+    lines.last.chomp
+  end
+
+  # @return [Boolean] true if the {#status\_line} contains the substring
+  #   "Succeeded"
+  #
+  # @return [Boolean] false otherwise
+  def succeeded?
+    return nil if status_line.nil?
+    status_line.include? 'Succeeded'
+  end
+
+  # Waits for {#status\_timeout} seconds for both (A) the runfile to disappear
+  # and (B) the statusfile to appear
+  #
+  # @raise [Rhubarb::StatusFileTimeoutError] if this method times out waiting
+  #   for eaither (A) the runfile to disappear or (B) the statusfile to appear
   def wait_for_statusfile
     deadline = Time.now + status_timeout
     debug "Waiting for #{job_runfile.inspect} until #{deadline} (#{status_timeout} seconds)"
@@ -98,18 +155,5 @@ class Rhubarb::Driver
     # Huzzah status file
     info "Statusfile found: #{job_statusfile}"
     job_statusfile
-  end
-
-  def status_line
-    return nil if not File.exist? job_statusfile
-
-    lines = File.readlines(job_statusfile)
-    return nil if lines.last.nil?
-    lines.last.chomp
-  end
-
-  def succeeded?
-    return nil if status_line.nil?
-    status_line.include? 'Succeeded'
   end
 end

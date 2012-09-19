@@ -1,3 +1,4 @@
 Gemfile.lock
 spec/live/*
 .yardoc
+doc
