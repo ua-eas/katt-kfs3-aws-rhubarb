@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+require 'thor'
+
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'lib', 'rhubarb')
+
+class BatchLogRunner < Thor
+  desc 'debug JOB_STREAM MESSAGE', 'Log MESSAGE to the JOB_STREAM log file as an DEBUG message.'
+
+  def debug(job_stream, *message)
+    logger = Rhubarb::Logger.new(job_stream)
+    logger.debug message.join(' ')
+  end
+
+  desc 'info JOB_STREAM MESSAGE', 'Log MESSAGE to the JOB_STREAM log file as an INFO message.'
+  def info(job_stream, *message)
+    logger = Rhubarb::Logger.new(job_stream)
+    logger.info message.join(' ')
+  end
+
+  desc 'warn JOB_STREAM MESSAGE', 'Log MESSAGE to the JOB_STREAM log file as an WARN message.'
+  def warn(job_stream, *message)
+    logger = Rhubarb::Logger.new(job_stream)
+    logger.warn message.join(' ')
+  end
+
+  desc 'error JOB_STREAM MESSAGE', 'Log MESSAGE to the JOB_STREAM log file as an ERROR message.'
+  def error(job_stream, *message)
+    logger = Rhubarb::Logger.new(job_stream)
+    logger.error message.join(' ')
+  end
+end
+
+BatchLogRunner.start
