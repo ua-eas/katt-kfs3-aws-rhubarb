@@ -11,3 +11,8 @@ Then /^I should not see anything on (stdout|stderr)$/ do |pipe_name|
   lines = pipe.readlines
   lines.should be_empty
 end
+
+Then /^I should see "(.*?)" in "(.*?)"$/ do |text, file|
+  lines = File.readlines(File.join(ENV['BATCH_HOME'], file))
+  lines.last[text].should_not be nil
+end
