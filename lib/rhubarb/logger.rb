@@ -41,6 +41,10 @@ class Rhubarb::Logger
     info("##### #{message}")
   end
 
+  def h6(message)
+    info("###### #{message}")
+  end
+
   def stamp(message)
     @log4r_logger.remove(@job_stream_file_outputter)
     outputter = FileOutputter.new('fileOutputter', :filename => @job_stream_file)

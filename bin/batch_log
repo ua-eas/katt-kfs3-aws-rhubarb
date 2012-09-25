@@ -28,6 +28,42 @@ class BatchLogRunner < Thor
     logger = Rhubarb::Logger.new(job_stream)
     logger.error message.join(' ')
   end
+
+  desc 'h1 JOB_STREAM MESSAGE', 'Log MESSAGE to the JOB_STREAM log file as an H1 message.'
+  def h1(job_stream, *message)
+    logger = Rhubarb::Logger.new(job_stream)
+    logger.h1 message.join(' ')
+  end
+
+  desc 'h2 JOB_STREAM MESSAGE', 'Log MESSAGE to the JOB_STREAM log file as an H2 message.'
+  def h2(job_stream, *message)
+    logger = Rhubarb::Logger.new(job_stream)
+    logger.h2 message.join(' ')
+  end
+
+  desc 'h3 JOB_STREAM MESSAGE', 'Log MESSAGE to the JOB_STREAM log file as an H3 message.'
+  def h3(job_stream, *message)
+    logger = Rhubarb::Logger.new(job_stream)
+    logger.h3 message.join(' ')
+  end
+
+  desc 'h4 JOB_STREAM MESSAGE', 'Log MESSAGE to the JOB_STREAM log file as an H4 message.'
+  def h4(job_stream, *message)
+    logger = Rhubarb::Logger.new(job_stream)
+    logger.h4 message.join(' ')
+  end
+
+  desc 'h5 JOB_STREAM MESSAGE', 'Log MESSAGE to the JOB_STREAM log file as an H5 message.'
+  def h5(job_stream, *message)
+    logger = Rhubarb::Logger.new(job_stream)
+    logger.h5 message.join(' ')
+  end
+
+  desc 'h6 JOB_STREAM MESSAGE', 'Log MESSAGE to the JOB_STREAM log file as an H6 message.'
+  def h6(job_stream, *message)
+    logger = Rhubarb::Logger.new(job_stream)
+    logger.h6 message.join(' ')
+  end
 end
 
 BatchLogRunner.start
