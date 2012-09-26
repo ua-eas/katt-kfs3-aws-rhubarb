@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+require 'thor'
+
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'lib', 'rhubarb')
+
+class BatchLogrollRunner < Thor
+  desc 'roll', 'roll the logs in $BATCH_HOME/logs'
+
+  def roll()
+    roller = Rhubarb::LogRoller.new
+    roller.roll
+  end
+end
+
+if ARGV.empty?
+  # Perform the default, it doesn't have to be a Thor task
+  BatchLogrollRunner.new.roll
+else
+  # Start Thor as usual
+  BatchLogrollRunner.start
+end
