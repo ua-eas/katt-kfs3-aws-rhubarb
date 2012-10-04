@@ -7,6 +7,7 @@ module Helpers
     @cfg_batch_home = File.join(@live_dir, 'uaf-cfg')
     @stg_batch_home = File.join(@live_dir, 'uaf-stg')
     @trn_batch_home = File.join(@live_dir, 'uaf-trn')
+    @sql_home       = File.join(@live_dir, 'sql')
 
     # Delete everything in 'live'
     FileUtils.rm_rf Dir.glob(@live_files)
