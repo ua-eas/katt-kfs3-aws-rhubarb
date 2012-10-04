@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+require 'thor'
+
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'lib', 'rhubarb')
+
+class BatchDriveRunner < Thor
+  desc 'drive JOBSTREAM JOB', 'drive a batch execution, using file-based communication with the batch invoker'
+  #desc 'drive', 'drive a batch execution, using file-based communication with the batch invoker'
+
+  def drive(job_stream, job_name)
+    driver = Rhubarb::Driver.new(job_stream, job_name)
+    driver.log_to_stdout
+    driver.drive
+    exit driver.succeeded? ? 0 : 1
+  end
+end
+
+if ARGV.empty?
+  # Perform the default, it doesn't have to be a Thor task
+  BatchDriveRunner.new.drive
+else
+  ARGV.unshift "drive"
+  # Start Thor as usual
+  BatchDriveRunner.start
+end

@@ -4,7 +4,7 @@ class Rhubarb::Driver
 
   attr_accessor :logger, :status_timeout, :status_sleep
 
-  delegate :debug, :info, :warn, :error, :fatal, to: :@logger
+  delegate :debug, :info, :warn, :error, :fatal, :log_to_stdout, to: :@logger
 
   # Rhubarb::Driver must be initialized with a job stream and a job name. This
   # means that an instance of the driver will only monitor the runfile and
@@ -45,7 +45,15 @@ class Rhubarb::Driver
   def drive
     drop_runfile         # will raise if fail
     wait_for_statusfile  # will raise if fail
-    succeeded?           # true or false
+    if succeeded?           # true or false
+      info "#{@job_name} succeeded:"
+      info "> #{status_line}"
+      return true
+    else
+      error "#{@job_name} did not succeed:"
+      error "> #{status_line}"
+      return false
+    end
   end
 
   # Drops {#job\_runfile} into the filesystem and returns the {#job\_runfile}
@@ -129,7 +137,8 @@ class Rhubarb::Driver
   #   for eaither (A) the runfile to disappear or (B) the statusfile to appear
   def wait_for_statusfile
     deadline = Time.now + status_timeout
-    debug "Waiting for #{job_runfile.inspect} until #{deadline} (#{status_timeout} seconds)"
+    info "Waiting for #{job_runfile.inspect}"
+    info "Timeout is #{deadline} (#{status_timeout} seconds from now)."
     loop do
       if (Time.now > deadline)
         # Consider chronic duration if we want to pretty print this:

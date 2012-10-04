@@ -124,14 +124,14 @@ describe Rhubarb::Driver, '#wait_for_statusfile' do
     expect { @driver.wait_for_statusfile }.to raise_error(Rhubarb::StatusFileTimeoutError)
   end
 
-  it 'should DEBUG log when #wait_for_statusfile starts' do
+  it 'should INFO log when #wait_for_statusfile starts' do
     begin
       @driver.wait_for_statusfile
     rescue
     end
 
     lines = File.readlines(@driver.logger.job_stream_file)
-    lines.should include_something_like /[0-9:]{8} \(DEBUG\) .*Waiting for/
+    lines.should include_something_like /[0-9:]{8} \(INFO\) .*Waiting for/
   end
 
   it 'should ERROR log when no status file shows up' do
