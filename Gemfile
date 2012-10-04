@@ -10,4 +10,11 @@ group :test do
   gem 'cucumber'
   gem 'open4'
   gem 'timecop'
+  gem 'guard'
+  gem 'guard-rspec'
+  gem 'guard-cucumber'
+  if RUBY_PLATFORM =~ /linux/i
+    gem 'libnotify'
+    gem 'rb-inotify', :require => false
+  end
 end
