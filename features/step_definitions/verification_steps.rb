@@ -2,7 +2,7 @@ Then /^the command should return (successfully|unsuccessfully)$/ do |success|
   if success == 'successfully'
     @status.exitstatus.should be 0
   else
-    @status.existstatus.should_not be 0
+    @status.exitstatus.should_not be 0
   end
 end
 
@@ -15,6 +15,16 @@ end
 Then /^I should see "(.*?)" in "(.*?)"$/ do |text, file|
   lines = File.readlines(File.join(ENV['BATCH_HOME'], file))
   lines.last[text].should_not be nil
+end
+
+Then /^I should see \/(.*?)\/ in "(.*?)"$/ do |rgx, file|
+  text = File.read(File.join(ENV['BATCH_HOME'], file))
+  text.should match(Regexp.new rgx)
+end
+
+Then /^I should see \/(.*?)\/ in stdout$/ do |rgx|
+    @stdout_text ||= @stdout.read
+    @stdout_text.should match(Regexp.new rgx)
 end
 
 Then /^I should see no logs in the logs directory$/ do
