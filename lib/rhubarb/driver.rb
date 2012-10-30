@@ -43,6 +43,8 @@ class Rhubarb::Driver
   end
 
   def drive
+    # TODO raise if already driven
+
     drop_runfile         # will raise if fail
     wait_for_statusfile  # will raise if fail
     if succeeded?           # true or false
@@ -136,6 +138,8 @@ class Rhubarb::Driver
   # @raise [Rhubarb::StatusFileTimeoutError] if this method times out waiting
   #   for eaither (A) the runfile to disappear or (B) the statusfile to appear
   def wait_for_statusfile
+    # TODO raise different exceptions
+    # TODO refactor into two-ish methods
     deadline = Time.now + status_timeout
     info "Waiting for #{job_runfile.inspect}"
     info "Timeout is #{deadline} (#{status_timeout} seconds from now)."

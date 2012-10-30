@@ -31,6 +31,7 @@ describe Rhubarb::SQL, '.new' do
   end
 
   it 'should initialize successfully' do
+    pending
     Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
     Rhubarb::SQL.stub(:sql_home).and_return()
     expect { Rhubarb::SQL.new('foo.sql') }.to_not raise_error
