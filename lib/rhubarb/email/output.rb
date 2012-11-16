@@ -1,3 +1,5 @@
+require 'redcarpet'
+
 class Rhubarb::Email::Output < Mail::Message
   attr_reader :name, :attachments_dir, :attachments_globs
 
@@ -7,8 +9,16 @@ class Rhubarb::Email::Output < Mail::Message
     @name              = config['name']
 
     self['subject']    = config['subject']
-    self['body']       = config['message']
-    #self['from']       = '150.135.241.89@arizona.edu'
+
+    self.text_part do
+      body config['message']
+    end
+
+    self.html_part do
+      content_type 'text/html; charset=UTF-8'
+      body Redcarpet::Markdown.new(Redcarpet::Render::HTML, :no_intra_emphasis=>true).render(config['message'])
+    end
+
     self['from']       = Rhubarb::Email.addresses['FROM_ADDRESS']
 
     recipients         = []

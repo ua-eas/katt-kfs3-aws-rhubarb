@@ -5,6 +5,7 @@ gem 'log4r'
 gem 'mail'
 gem 'thor'
 gem 'icalendar'
+gem 'redcarpet'
 
 group :test do
   gem 'rspec'
