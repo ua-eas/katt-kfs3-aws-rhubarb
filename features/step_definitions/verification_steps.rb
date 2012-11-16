@@ -41,3 +41,8 @@ Then /^I should see (\d+) logs in the "(.*?)" log archive directory$/ do |count,
   File.directory?(File.join(ENV['BATCH_HOME'], 'logs', job_stream)).should be_true
   Dir.glob(File.join(ENV['BATCH_HOME'], 'logs', job_stream, '*.log')).size.should be count
 end
+
+Then /^a report should be fake delivered to "(.*?)"$/ do |address|
+  @stdout_text ||= @stdout.read
+  @stdout_text.should include(address)
+end

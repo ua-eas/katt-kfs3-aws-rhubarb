@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+require 'thor'
+
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'lib', 'rhubarb')
+
+class BatchDeliverer < Thor
+  desc 'deliver JOBSTREAM REPORT', 'deliver a batch report based on the job stream templates'
+
+  method_option :test, :type => :boolean, :desc => '"Send" emails rather than sending emails'
+
+  def deliver(job_stream, report)
+    Rhubarb::Email.parse_addresses(File.join(File.dirname(__FILE__), '..', 'addresses.yaml'))
+    job_stream_hash = Rhubarb::Email.parse_config_file(File.join(File.dirname(__FILE__), '..', "#{job_stream}_email.yaml"))
+
+    if options[:test]
+      job_stream_hash.outputs[report].delivery_method :test
+      puts job_stream_hash.deliver report
+    else
+      job_stream_hash.deliver report
+    end
+
+    # TODO exit something proper
+    exit 0
+  end
+end
+
+if ARGV.empty?
+  # Perform the default, it doesn't have to be a Thor task
+  BatchDeliverer.new.deliver
+else
+  ARGV.unshift "deliver"
+  # Start Thor as usual
+  BatchDeliverer.start
+end

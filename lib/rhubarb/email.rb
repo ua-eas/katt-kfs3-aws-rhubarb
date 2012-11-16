@@ -1,3 +1,5 @@
+require 'mail'
+
 # Rhubarb::Email manages Emails
 class Rhubarb::Email
   delegate :debug, :info, :warn, :error, :fatal, :log_to_stdout, to: :@logger
@@ -16,6 +18,22 @@ class Rhubarb::Email
   def self.parse_config(text)
     config_as_hash = YAML.load text
     Rhubarb::Email::JobStream.new(config_as_hash)
+  end
+
+  # TODO raise if this file doesn't exist
+  def self.parse_config_file(file_name)
+    config_as_hash = YAML.load File.read(file_name)
+    Rhubarb::Email::JobStream.new(config_as_hash)
+  end
+
+  # TODO raise if this file doesn't exist
+  def self.parse_addresses(file)
+    @@addresses = YAML.load(File.read file)
+  end
+
+  # TODO raise if @@addresses doesn't exist
+  def self.addresses
+    @@addresses
   end
 end
 
