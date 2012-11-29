@@ -4,10 +4,12 @@ describe Rhubarb::Email, "#deliver" do
   include Helpers
   include Mail::Matchers
 
-  before(:all) do
+  before(:each) do
     cleanse_live
     Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+  end
 
+  before(:all) do
     Rhubarb::Email.parse_addresses(File.join(File.dirname(__FILE__), 'addresses.yaml'))
 
     js_archibus = <<ARCHIBUS

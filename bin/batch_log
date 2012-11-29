@@ -64,6 +64,34 @@ class BatchLogRunner < Thor
     logger = Rhubarb::Logger.new(job_stream)
     logger.h6 message.join(' ')
   end
+
+  desc 'stamp JOB_STREAM [MESSAGE]', 'Log MESSAGE to the JOB_STREAM log file as an fully timestamped message.'
+  def stamp(job_stream, *message)
+    logger = Rhubarb::Logger.new(job_stream)
+    message = [] if message.nil? || message.empty?
+    message.unshift 'timestamp'
+    logger.stamp message.join(' ')
+  end
+
+  desc 'initiate JOB_STREAM [MESSAGE]', 'Log "initialize MESSAGE" to the JOB_STREAM log file as an fully timestamped message.'
+  def initiate(job_stream, *message)
+    logger = Rhubarb::Logger.new(job_stream)
+    message = [] if message.nil? || message.empty?
+    message.unshift 'initialize'
+    logger.stamp message.join(' ')
+  end
+
+  desc 'finalize JOB_STREAM [MESSAGE]', 'Log "finalize MESSAGE" to the JOB_STREAM log file as an fully timestamped message.'
+  def finalize(job_stream, *message)
+    logger = Rhubarb::Logger.new(job_stream)
+    message = [] if message.nil? || message.empty?
+    message.unshift 'finalize'
+    logger.stamp message.join(' ')
+  end
 end
 
+if ARGV[0] != nil && ARGV[0]['initialize']
+  ARGV.shift
+  ARGV.unshift "initiate"
+end
 BatchLogRunner.start

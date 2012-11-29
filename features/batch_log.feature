@@ -36,3 +36,16 @@ Feature: The batch_log binary
       | h4 einvoice This is a header line. | #### This   |
       | h5 einvoice This is a header line. | ##### This  |
       | h6 einvoice This is a header line. | ###### This |
+
+  Scenario Outline: stamp a logfile
+    When I run the command "bin/batch_log <Command> einvoice"
+    Then the command should return successfully
+    And I should not see anything on stdout
+    And I should not see anything on stderr
+    And I should see "<Command>" in "logs/einvoice.log"
+
+  Examples:
+    | Command    |
+    | stamp      |
+    | initialize |
+    | finalize   |
