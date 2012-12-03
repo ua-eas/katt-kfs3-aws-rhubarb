@@ -84,6 +84,7 @@ end
 
 require_relative 'rhubarb/logger'
 require_relative 'rhubarb/log_roller'
+require_relative 'rhubarb/archivist'
 require_relative 'rhubarb/driver'
 require_relative 'rhubarb/sql'
 require_relative 'rhubarb/calendar'
