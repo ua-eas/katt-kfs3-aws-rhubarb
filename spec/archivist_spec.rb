@@ -44,8 +44,10 @@ describe Rhubarb::Archivist, '#archive' do
     Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
     @accept_dir   = ['purap', 'electronicInvoice', 'accept']
     @shipping_dir = ['pdp', 'shipping']
+    @pcard_dir    = ['fp', 'procurementCard']
     @archivist_01 = Rhubarb::Archivist.new(@accept_dir.join('/'))
     @archivist_02 = Rhubarb::Archivist.new(@shipping_dir.join('/'))
+    @archivist_03 = Rhubarb::Archivist.new(@pcard_dir.join('/'))
     @staging_dir  = File.join(@stg_batch_home, 'staging')
     @archive_dir  = File.join(@stg_batch_home, 'archive')
   end
@@ -70,6 +72,10 @@ describe Rhubarb::Archivist, '#archive' do
     #@archivist_02.logger.should_receive(:info).at_least(4).times
     Dir.glob(File.join(@staging_dir, *@shipping_dir) + '/*').should be_empty
     Dir.glob(File.join(@archive_dir, *@shipping_dir) + '/*').should_not be_empty
+  end
+
+  it 'should not raise when source directory doesn\'t exist' do
+    expect { @archivist_03.archive! }.to_not raise_error
   end
 end
 
