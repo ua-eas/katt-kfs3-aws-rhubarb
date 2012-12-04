@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+require 'thor'
+
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'lib', 'rhubarb')
+
+class BatchArchiveRunner < Thor
+  desc 'archive DIRECTORY', "archive all files in DIRECTORY into 'archive/'"
+
+  def archive(directory_name)
+    archivist = Rhubarb::Archivist.new(directory_name)
+    archivist.log_to_stdout
+    archivist.archive!
+    exit 0
+  end
+end
+
+if ARGV.empty?
+  # Perform the default, it doesn't have to be a Thor task
+  BatchArchiveRunner.new.drive
+else
+  ARGV.unshift "archive"
+  # Start Thor as usual
+  BatchArchiveRunner.start
+end

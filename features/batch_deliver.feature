@@ -11,7 +11,7 @@ Feature: The batch_deliver binary
     When I run the command "bin/batch_deliver <JobStream> <Report> --test"
     Then the command should return successfully
     And  I should not see anything on stderr
-    And  a report should be fake delivered to "srawlins@email.arizona.edu"
+    And  a report should be fake delivered to "katt-automation@list.arizona.edu"
 
     Examples:
       | JobStream | Report |
