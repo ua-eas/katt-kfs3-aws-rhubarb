@@ -74,7 +74,7 @@ class BatchLogRunner < Thor
   end
 
   desc 'timestamp JOB_STREAM [MESSAGE]', 'Log MESSAGE to the JOB_STREAM log file as an fully timestamped message.'
-  def stamp(job_stream, *message)
+  def timestamp(job_stream, *message)
     logger = Rhubarb::Logger.new(job_stream)
     message = [] if message.nil? || message.empty?
     message.unshift 'timestamp'
