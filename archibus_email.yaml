@@ -9,7 +9,9 @@ output:
     if any, as a result of any Archibus files that were processed for the day.
   to:
   - KATT_AUTOMATION_ADDRESS
-  - KFS_BSA_ADDRESS
+  - KFS_CAPITAL_ASSETS_ADDRESS
+  cc:
+  - UA_CENTAL_RECEIVING_ADDRESS
   attachments_globs:
   - buildingImportErrorReport_*.txt
   - buildingImportSuccessReport_*.txt
