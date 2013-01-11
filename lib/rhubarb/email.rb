@@ -22,7 +22,7 @@ class Rhubarb::Email
 
   # TODO raise if this file doesn't exist
   def self.parse_config_file(file_name)
-    config_as_hash = YAML.load File.read(file_name)
+    config_as_hash = YAML.load File.read(file_name.downcase)
     Rhubarb::Email::JobStream.new(config_as_hash)
   end
 
