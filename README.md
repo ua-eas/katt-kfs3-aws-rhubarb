@@ -13,7 +13,7 @@ Rhubarb is tested on
 
 * **Ruby 1.9.3** on **Linux 3.0.0**
 
-That is all. It's targetted for RHEL 5.3, which has not that Ruby, so it also requires something like [KSI](http://uaz-kf-a09.mosaic.arizona.edu/gitlab/ksi) to be installed and working.
+That is all. It's targetted for RHEL 5.3, which has not that Ruby, so it also requires something like [KSI](https://github.com/ua-eas/ksi) to be installed and working.
 
 Roadmap
 -------
