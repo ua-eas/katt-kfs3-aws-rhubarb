@@ -8,7 +8,7 @@ class Rhubarb::Email::JobStream
     # target_name = key, the target name
     # target_entry = value, a nested hash, specific email info for each target
     config['outputs'].each do |target_name, target_entry|
-        @outputs[target_name] = Rhubarb::Email::Output.new(target_name, target_entry)
+        @outputs[target_name] = Rhubarb::Email::Output.new(target_entry)
     end
 
   end
@@ -16,7 +16,7 @@ class Rhubarb::Email::JobStream
 
   def deliver(target_name)
    
-    if name == 'all'
+    if name.eql? 'all'
         #send all in an each loop
         @outputs.each do |target_name|
             @outputs[target_name].deliver!
