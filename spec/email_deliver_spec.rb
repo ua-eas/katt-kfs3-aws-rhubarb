@@ -23,7 +23,14 @@ outputs:
       building/room records successfully updated and any error conditions found,
       if any, as a result of any Archibus files that were processed for the day.
     to:
-    - SAM_RAWLINS_ADDRESS
+    - JOSH_SHALOO_ADDRESS
+  bar:
+    subject: "DEV - UAF-ARCHB-DLV-LOADRPT - Archibus Processing Information - Capital Assets Team Review"
+    message: >
+      Attached are the reports that show the results and provide information on
+      building/room records successfully updated and any error conditions found,
+      if any, as a result of any Archibus files that were processed for the day.
+    to:
     - HEATHER_LO_ADDRESS
 ARCHIBUS
 
@@ -42,7 +49,7 @@ outputs:
       if any, as a result of any Archibus files that were processed for the day.
     to:
     - KATT_AUTOMATION_ADDRESS
-    - KFS_BSA_ADDRESS
+    - JOSH_SHALOO_ADDRESS
     attachments_dir: 
     - "#{File.join(File.expand_path(File.dirname(__FILE__)), 'attachments')}"
     attachments_globs:
@@ -58,7 +65,7 @@ outputs:
       if any, as a result of any Archibus files that were processed for the day.
     to:
     - KATT_AUTOMATION_ADDRESS
-    - KFS_BSA_ADDRESS
+    - HEATHER_LO_ADDRESS
     attachments_dir: 
     - "#{File.join(File.expand_path(File.dirname(__FILE__)), 'attachments')}"
     attachments_globs:
@@ -71,9 +78,8 @@ ARCHIBUS
   end
 
   after(:each) do
-    @js.outputs['report'].delivery_method :smtp
-    @js_from_file.outputs['report'].delivery_method :smtp
-    @js_w_attachments.outputs['report'].delivery_method :smtp
+    @js.set_delivery_method :smtp
+    
     Mail::TestMailer.deliveries.clear
   end
 
@@ -94,13 +100,20 @@ ARCHIBUS
       cleanse_live
       Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
 
-      @js.outputs['report'].delivery_method :test
-      @js_from_file.outputs['report'].delivery_method :test
+      @js.set_delivery_method :test
+      @js_from_file.set_delivery_method :test
+      
     end
 
-    it "should deliver a basic report" do
+    it "should deliver a basic report for a single output" do
       @js.deliver 'foo'
-      should have_sent_email.to("srawlins@email.arizona.edu")
+      should have_sent_email.to("shaloo@email.arizona.edu")
+    end
+
+    it "should deliver a report for all outputs" do
+      @js.deliver 'all'
+      should have_sent_email.to("shaloo@email.arizona.edu")
+      should have_sent_email.to("hlo@email.arizona.edu")
     end
 
     it "should deliver a basic report from a config file" do

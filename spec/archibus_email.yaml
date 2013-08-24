@@ -1,6 +1,6 @@
 ---
 name: ARCHIBUS
-output:
+outputs:
   foo:
     subject: "DEV - UAF-ARCHB-DLV-LOADRPT - Archibus Processing Information - Capital Assets Team Review"
     message: >

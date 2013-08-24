@@ -52,10 +52,6 @@ ARCHIBUS
     @js.outputs['foo'].should_not be nil
   end
 
-  it "should generate Output with a correct name" do
-    @js.outputs['foo'].name.should == "foo"
-  end
-
   it "should generate Output with a correct subject" do
     @js.outputs['foo'].subject.should == "DEV - UAF-ARCHB-DLV-LOADRPT - Archibus Processing Information - Capital Assets Team Review"
   end
