@@ -21,7 +21,7 @@ outputs:
     - JOSH_SHALOO_ADDRESS
     attachment_dirs:
     - /home/u00/env/kfs/opt/work/dev/kfs/reports/foo
-    attachments_globs:
+    attachments:
     - GlobFileFilter: [foo_report*.txt]
   job_not_ok:
     subject: "DEV - UAF-FOO-DLV-EMAIL - Job Failed"
@@ -34,5 +34,5 @@ outputs:
     - JOSH_SHALOO_ADDRESS
     attachment_dirs:
     - /home/u00/env/kfs/opt/work/dev/kfs/logs/foo
-    attachments_globs:
+    attachments:
     - GlobFileFilter: [foo*.log]

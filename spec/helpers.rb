@@ -42,17 +42,21 @@ module Helpers
       report_dir + "/baz_4.log"
     ]
 
+    #add a tracking dir
+    report_dir = Rhubarb.batch_home + '/tracking/emailed/reports/ARCHIBUSFOO/'
+    FileUtils.mkdir_p report_dir
+
     #add a tracking file for one of the baz reports to simulate tracking
-    FileUtils.touch Rhubarb.batch_home + '/tracking/emailed/reports/ARCHIBUS/baz_1.log.emailed'
+    FileUtils.touch Rhubarb.batch_home + '/tracking/emailed/reports/ARCHIBUSFOO/baz_1.log.emailed'
 
   end
   def cleanup_email_tracking_files
     #clean up the fake reports
     FileUtils.rm_rf Rhubarb.batch_home + '/reports/fooeinvoice'
     #clean up tracking files
-    FileUtils.rm Rhubarb.batch_home + '/tracking/emailed/reports/ARCHIBUS/baz_1.log.emailed'
-    FileUtils.rm Rhubarb.batch_home + '/tracking/emailed/reports/ARCHIBUS/baz_2.log.emailed'
-    FileUtils.rm Rhubarb.batch_home + '/tracking/emailed/reports/ARCHIBUS/baz_3.log.emailed'
-    FileUtils.rm Rhubarb.batch_home + '/tracking/emailed/reports/ARCHIBUS/baz_4.log.emailed'
+    FileUtils.rm Rhubarb.batch_home + '/tracking/emailed/reports/ARCHIBUSFOO/baz_1.log.emailed'
+    FileUtils.rm Rhubarb.batch_home + '/tracking/emailed/reports/ARCHIBUSFOO/baz_2.log.emailed'
+    FileUtils.rm Rhubarb.batch_home + '/tracking/emailed/reports/ARCHIBUSFOO/baz_3.log.emailed'
+    FileUtils.rm Rhubarb.batch_home + '/tracking/emailed/reports/ARCHIBUSFOO/baz_4.log.emailed'
   end
 end

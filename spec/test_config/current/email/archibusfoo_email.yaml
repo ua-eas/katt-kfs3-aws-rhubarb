@@ -1,10 +1,10 @@
 ---
-name: EINVOICE
+name: ARCHIBUSFOO
 outputs:
   job_not_ok:
-    subject: "DEV - UAF-FOO-DLV-EMAIL - Job Failed"
+    subject: "ENV - UAF-FOO-DLV-EMAIL - Job Failed"
     message: |
-      The job FOO has failed, 
+      The job FOO has failed on DATE, 
       attached is a log of events,
       please see KFS logs for further detail.
     to: 
@@ -15,7 +15,7 @@ outputs:
     attachments:
     - GlobFileFilter: [foo_*.log, bar_*.log]
   job_ok:
-    subject: "DEV - UAF-FOO-DLV-EMAIL - Job Success"
+    subject: "ENV - UAF-FOO-DLV-EMAIL - Job Success"
     message: |
       The job FOO has finished successfully.
     to: 

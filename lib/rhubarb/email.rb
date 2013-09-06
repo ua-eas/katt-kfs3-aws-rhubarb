@@ -8,9 +8,10 @@ class Rhubarb::Email
 
 
   # Public: Initialize an Email object
-  def initialize()
+  def initialize(job_stream_name)
     Rhubarb.validate_batch_home
-    @logger = Rhubarb::Logger.new('email')
+    @logger = Rhubarb::Logger.new(job_stream_name)
+    @job_stream_name = job_stream_name
 
     parse_addresses
 
@@ -35,8 +36,8 @@ class Rhubarb::Email
   #              to intialize.
   #
   # Returns a Rhubarb::Email::JobStream object
-  def get_jobstream_by_name(job_stream)
-    parse_config_file(job_stream)
+  def get_jobstream
+    parse_config_file(@job_stream_name)
   end
 
   # Public: This method will instantiate a new jobstream object based on 

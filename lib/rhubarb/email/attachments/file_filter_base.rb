@@ -3,12 +3,12 @@ class Rhubarb::Email::FileFilterBase
   delegate :debug, :info, :warn, :error, :fatal, :log_to_stdout, to: :@logger
   def initialize( args = {} )
 
-    @logger = Rhubarb::Logger.new('email')
-
-    @jobstream 		    = args[:jobstream]
-    @output	  		    = args[:output]
+    @jobstream        = args[:jobstream]
+    @output           = args[:output]
     @attachment_dirs  = args[:attachment_dirs]
-  	@parameters 	    = args[:parameters]
+    @parameters       = args[:parameters]
+
+    @logger = Rhubarb::Logger.new(@jobstream.name)
 
   	# Hook to allow subclass objects to implement additional 
     # functionality...

@@ -1,6 +1,6 @@
 require_relative 'spec_helper'
 
-describe Rhubarb::Email, "#deliver" do
+describe Rhubarb::Email, ".new" do
   include Helpers
   include Mail::Matchers
 
@@ -10,10 +10,14 @@ describe Rhubarb::Email, "#deliver" do
   end
 
   before(:all) do
-    email_deliverer = Rhubarb::Email.new
 
-    @js_from_file = email_deliverer.get_jobstream_by_name('archibus')
-    @js_w_attachments = email_deliverer.get_jobstream_by_name('einvoice')
+    debugger
+
+    email_deliverer_from_file = Rhubarb::Email.new('archibus')
+    email_deliverer_w_attachments = Rhubarb::Email.new('einvoice')
+
+    @js_from_file = email_deliverer_from_file.get_jobstream
+    @js_w_attachments = email_deliverer_w_attachments.get_jobstream
   end
 
   after(:each) do
@@ -46,19 +50,19 @@ describe Rhubarb::Email, "#deliver" do
 
     it "should deliver a basic report for a single output" do
       @js_from_file.deliver 'foo'
-      should have_sent_email.to("kfsbsa@list.arizona.edu")
+      @js_from_file.should have_sent_email.to("kfsbsa@list.arizona.edu")
     end
 
     it "should deliver a report for all outputs" do
       @js_w_attachments.deliver 'all'
-      should have_sent_email.to("shaloo@email.arizona.edu")
-      should have_sent_email.to("katt-automation@list.arizona.edu")
+      @js_w_attachments.should have_sent_email.to("shaloo@email.arizona.edu")
+      @js_w_attachments.should have_sent_email.to("katt-automation@list.arizona.edu")
     end
 
     it "should deliver a basic report from a config file" do
       @js_from_file.deliver 'foo'
-      should have_sent_email.to("katt-automation@list.arizona.edu")
-      should have_sent_email.to("kfsbsa@list.arizona.edu")
+      @js_from_file.should have_sent_email.to("katt-automation@list.arizona.edu")
+      @js_from_file.should have_sent_email.to("kfsbsa@list.arizona.edu")
     end
   end
 end

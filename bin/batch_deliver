@@ -32,9 +32,9 @@ class BatchDeliverer < Thor
   # Returns nothing. Exits with the expected status code of 0 if everything runs ok.
   def deliver(job_stream_name, report)
 
-    email_deliverer = Rhubarb::Email.new
+    email_deliverer = Rhubarb::Email.new(job_stream_name)
 
-    job_stream = email_deliverer.get_jobstream_by_name(job_stream_name)
+    job_stream = email_deliverer.get_jobstream
 
     if options[:test]
       job_stream.set_delivery_method :test

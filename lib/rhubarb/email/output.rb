@@ -57,7 +57,7 @@ class Rhubarb::Email::Output < Mail::Message
     end
     self['to']         = recipients.join(',')
 
-    if @config['attachment_dirs'] && @config['attachments_globs']
+    if @config['attachment_dirs'] && @config['attachments']
 
       @attachment_dirs = @config['attachment_dirs']
       @attachment_files = get_attachment_files
@@ -75,7 +75,7 @@ class Rhubarb::Email::Output < Mail::Message
   def get_attachment_files
     attachments = []
 
-    @config['attachments_globs'].each do | attachment_hash |
+    @config['attachments'].each do | attachment_hash |
       attachment_hash.each do | class_name, parameter_array |
         attachment_filter = Object::const_get('Rhubarb::Email::' + class_name).new( 
           :output          => self,

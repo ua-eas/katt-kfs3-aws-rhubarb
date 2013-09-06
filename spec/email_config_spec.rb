@@ -18,39 +18,9 @@ describe Rhubarb::Email, "#parse_config" do
 
     add_test_reports
 
-    email_deliverer = Rhubarb::Email.new
+    email_deliverer = Rhubarb::Email.new('ARCHIBUSFOO')
 
-    js_archibus = <<ARCHIBUS
----
-name: ARCHIBUS
-outputs:
-  job_not_ok:
-    subject: "ENV - UAF-FOO-DLV-EMAIL - Job Failed"
-    message: |
-      The job FOO has failed on DATE, 
-      attached is a log of events,
-      please see KFS logs for further detail.
-    to: 
-    - KATT_AUTOMATION_ADDRESS
-    - JOSH_SHALOO_ADDRESS
-    attachment_dirs:
-    - BATCH_HOME/reports/fooeinvoice
-    attachments_globs:
-    - GlobFileFilter: [foo_*.log, bar_*.log]
-  job_ok:
-    subject: "ENV - UAF-FOO-DLV-EMAIL - Job Success"
-    message: |
-      The job FOO has finished successfully.
-    to: 
-    - KATT_AUTOMATION_ADDRESS
-    - JOSH_SHALOO_ADDRESS
-    attachment_dirs:
-    - BATCH_HOME/reports/fooeinvoice
-    attachments_globs:
-    - GlobFileFilter: [foo_*.log, bar_*.log]
-    - GlobFileFilterTracker: [baz_*.log]
-ARCHIBUS
-    @js = email_deliverer.get_jobstream_from_text(js_archibus)
+    @js = email_deliverer.get_jobstream
   end
 
   after(:all) do
@@ -59,7 +29,7 @@ ARCHIBUS
 
 
   it "should generate JobStream representing the whole job_stream, with a correct name" do
-    @js.name.should == "ARCHIBUS"
+    @js.name.should == "ARCHIBUSFOO"
   end
 
   it "should generate JobStream representing the whole job_stream, with a correct Output" do

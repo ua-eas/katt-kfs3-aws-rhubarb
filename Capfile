@@ -38,7 +38,7 @@ namespace :deploy do
     end
   end
 
-  after :update, 'deploy:bundler'
+  after :updated, 'deploy:bundler'
 
   after :finishing, 'deploy:cleanup'
 
