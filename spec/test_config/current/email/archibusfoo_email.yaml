@@ -25,4 +25,4 @@ outputs:
     - BATCH_HOME/reports/fooeinvoice
     attachments:
     - GlobFileFilter: [foo_*.log, bar_*.log]
-    - GlobFileFilterTracker: [baz_*.log]
+    - GlobFileFilterTracker: [ARCHIBUSFOO_baz_*.log]

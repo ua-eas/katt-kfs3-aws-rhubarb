@@ -4,8 +4,7 @@ class Rhubarb::Email::GlobFileFilterTracker < Rhubarb::Email::GlobFileFilter
   def post_initialize( args = {} )
     
     @tracking_directory =  Rhubarb.batch_home
-    @tracking_directory += '/tracking/emailed/reports/'
-    @tracking_directory += @jobstream.name + '/'
+    @tracking_directory += '/reports/emailed/'
 
     FileUtils.mkdir_p @tracking_directory
 

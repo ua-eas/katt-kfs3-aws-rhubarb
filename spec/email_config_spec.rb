@@ -86,10 +86,10 @@ describe Rhubarb::Email, "#parse_config" do
     @js.outputs['job_ok'].attachments.map(&:filename).should include("bar_3.log")
     @js.outputs['job_ok'].attachments.map(&:filename).should include("bar_4.log")
     # the helper creates a tracking file for baz_1.log so this should not be included!
-    @js.outputs['job_ok'].attachments.map(&:filename).should_not include("baz_1.log")
-    @js.outputs['job_ok'].attachments.map(&:filename).should include("baz_2.log")
-    @js.outputs['job_ok'].attachments.map(&:filename).should include("baz_3.log")
-    @js.outputs['job_ok'].attachments.map(&:filename).should include("baz_4.log")
+    @js.outputs['job_ok'].attachments.map(&:filename).should_not include("ARCHIBUSFOO_baz_1.log")
+    @js.outputs['job_ok'].attachments.map(&:filename).should include("ARCHIBUSFOO_baz_2.log")
+    @js.outputs['job_ok'].attachments.map(&:filename).should include("ARCHIBUSFOO_baz_3.log")
+    @js.outputs['job_ok'].attachments.map(&:filename).should include("ARCHIBUSFOO_baz_4.log")
   end
 
   it "should generate multiple Outputs" do
