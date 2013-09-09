@@ -26,12 +26,12 @@ class Rhubarb::Email::Output < Mail::Message
   def initialize( args = {} )
     super()
 
-    Rhubarb.validate_batch_home
-    @logger = Rhubarb::Logger.new('email')
-
     @config    = args[:config]
     @name      = args[:target_name]
     @jobstream = args[:jobstream]
+
+    Rhubarb.validate_batch_home
+    @logger = Rhubarb::Logger.new(@jobstream.name)
 
     subject = @config['subject']
     subject = replace_tokens subject
