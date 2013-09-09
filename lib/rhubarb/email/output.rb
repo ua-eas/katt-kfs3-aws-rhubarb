@@ -77,7 +77,8 @@ class Rhubarb::Email::Output < Mail::Message
 
     @config['attachments'].each do | attachment_hash |
       attachment_hash.each do | class_name, parameter_array |
-        attachment_filter = Object::const_get('Rhubarb::Email::' + class_name).new( 
+        filter_class = 'Rhubarb::Email::' + class_name
+        attachment_filter = filter_class.constantize.new( 
           :output          => self,
           :parameters      => parameter_array,
           :jobstream       => jobstream,
