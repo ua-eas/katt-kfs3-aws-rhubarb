@@ -20,11 +20,12 @@ class Rhubarb::Email::JobStream
   # config  - A hash with the email configuration.
   #
   def initialize(config={})
-    Rhubarb.validate_batch_home
-    @logger = Rhubarb::Logger.new('email')
 
     @name = config['name']
     @outputs = {}
+
+    Rhubarb.validate_batch_home
+    @logger = Rhubarb::Logger.new(@name)
 
     debug "initializing jobstream: " + @name
 
