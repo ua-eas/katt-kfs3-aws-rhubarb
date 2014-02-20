@@ -9,6 +9,7 @@ outputs:
       a follow-up email after this one.
     to:
     - SCOTT_SKINNER_ADDRESS
+    - JOSH_SHALOO_ADDRESS
   job_ok:
     subject: "DEV - UAF-FOO-DLV-EMAIL - FOO Complete"
     message: >
@@ -17,10 +18,11 @@ outputs:
       which is the 'preferred' outcome.
     to:
     - SCOTT_SKINNER_ADDRESS
-    attachments_dir:
+    - JOSH_SHALOO_ADDRESS
+    attachment_dirs:
     - /home/u00/env/kfs/opt/work/dev/kfs/reports/foo
-    attachments_globs:
-    - foo_report*.txt
+    attachments:
+    - GlobFileFilter: [foo_report*.txt]
   job_not_ok:
     subject: "DEV - UAF-FOO-DLV-EMAIL - Job Failed"
     message: >
@@ -29,7 +31,8 @@ outputs:
       please see KFS logs for further detail.
     to:
     - SCOTT_SKINNER_ADDRESS
-    attachments_dir:
+    - JOSH_SHALOO_ADDRESS
+    attachment_dirs:
     - /home/u00/env/kfs/opt/work/dev/kfs/logs/foo
-    attachments_globs:
-    - foo*.log
+    attachments:
+    - GlobFileFilter: [foo*.log]
