@@ -29,11 +29,11 @@ class Rhubarb::Calendar
   # 2012-10-25 06:56:03,623 KFS [KFSScheduler_Worker-3] u:/d: INFO  org.quartz.plugins.history.LoggingTriggerHistoryPlugin :: Trigger unscheduled.processPdpCancelsAndPaidJob completed firing job unscheduled.processPdpCancelsAndPaidJob at  06:56:03 10/25/2012 with resulting trigger instruction code: DELETE TRIGGER
   def event_from_log_lines(lines)
     lines = lines.split(/\n+/)
-    event = @calendar.event do
-      dtstart      Rhubarb::Calendar.timestamp_from_line(lines, "Executing job")
-      dtend        Rhubarb::Calendar.timestamp_from_line(lines, "Finished executing job")
-      summary      Rhubarb::Calendar.job_name(lines)
-      description  lines.join('\n')
+    event = @calendar.event do |e|
+      e.dtstart     = Rhubarb::Calendar.timestamp_from_line(lines, "Executing job")
+      e.dtend       = Rhubarb::Calendar.timestamp_from_line(lines, "Finished executing job")
+      e.summary     = Rhubarb::Calendar.job_name(lines)
+      e.description = lines.join('\n')
     end
   end
 
