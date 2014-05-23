@@ -6,6 +6,7 @@ gem 'mail'
 gem 'thor'
 gem 'icalendar'
 gem 'redcarpet'
+gem 'tzinfo'
 
 
 group :test do
