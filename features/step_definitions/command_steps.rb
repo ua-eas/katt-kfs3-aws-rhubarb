@@ -33,7 +33,7 @@ When /^I log something for "(.*?)"$/ do |job_stream|
 end
 
 When /^the batch invoker removes the runfile$/ do
-  sleep 2
+  sleep 4
   runfiles = Dir.glob(File.join(ENV['BATCH_HOME'], 'control', "#{@job_name}*.run"))
   raise "No runfiles in control directory!" if runfiles.empty?
 
