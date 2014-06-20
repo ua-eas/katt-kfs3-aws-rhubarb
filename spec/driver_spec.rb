@@ -108,7 +108,7 @@ describe Rhubarb::Driver, '#wait_for_statusfile' do
 
     Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
     @driver = Rhubarb::Driver.new('einvoice', 'clearCacheJob')
-    @driver.status_timeout = 2
+    @driver.status_timeout = 10
     @driver.status_sleep = 1
     @control_dir = File.join(@stg_batch_home, 'control')
 
@@ -156,7 +156,6 @@ describe Rhubarb::Driver, '#wait_for_statusfile' do
   end
 
   it 'should return the name of the statusfile when the runfile disappears and the statusfile appears' do
-    @driver.status_timeout = 6
     statusfile_waiter = Thread.new do
       @driver.wait_for_statusfile
     end
@@ -172,7 +171,6 @@ describe Rhubarb::Driver, '#wait_for_statusfile' do
   end
 
   it 'should INFO log when the runfile disappears and the statusfile appears' do
-    @driver.status_timeout = 4
     statusfile_waiter = Thread.new do
       @driver.wait_for_statusfile
     end
