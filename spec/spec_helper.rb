@@ -20,7 +20,7 @@ module Matchers
       "expected #{@enumerable} to include something that matched /#{@expected_match}/, but no such luck"
     end
 
-    def negative_failure_message
+    def failure_message_when_negated
       "expected #{@enumerable} to not include anything that matched /#{@expected_match}/, but found '#{@examples.first}'"
     end
   end
