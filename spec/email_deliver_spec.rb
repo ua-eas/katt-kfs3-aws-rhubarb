@@ -6,7 +6,7 @@ describe Rhubarb::Email, ".new" do
 
   before(:each) do
     cleanse_live
-    Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+    allow(Rhubarb).to receive(:batch_home).and_return(@stg_batch_home)
   end
 
   before(:all) do
@@ -41,7 +41,7 @@ describe Rhubarb::Email, ".new" do
   context "not really delivering" do
     before(:each) do
       cleanse_live
-      Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+      allow(Rhubarb).to receive(:batch_home).and_return(@stg_batch_home)
 
       @js_from_file.set_delivery_method :test
       @js_w_attachments.set_delivery_method :test
@@ -50,19 +50,19 @@ describe Rhubarb::Email, ".new" do
 
     it "should deliver a basic report for a single output" do
       @js_from_file.deliver 'foo'
-      @js_from_file.should have_sent_email.to("kfsbsa@list.arizona.edu")
+      expect(@js_from_file).to have_sent_email.to("kfsbsa@list.arizona.edu")
     end
 
     it "should deliver a report for all outputs" do
       @js_w_attachments.deliver 'all'
-      @js_w_attachments.should have_sent_email.to("shaloo@email.arizona.edu")
-      @js_w_attachments.should have_sent_email.to("katt-automation@list.arizona.edu")
+      expect(@js_w_attachments).to have_sent_email.to("shaloo@email.arizona.edu")
+      expect(@js_w_attachments).to have_sent_email.to("katt-automation@list.arizona.edu")
     end
 
     it "should deliver a basic report from a config file" do
       @js_from_file.deliver 'foo'
-      @js_from_file.should have_sent_email.to("katt-automation@list.arizona.edu")
-      @js_from_file.should have_sent_email.to("kfsbsa@list.arizona.edu")
+      expect(@js_from_file).to have_sent_email.to("katt-automation@list.arizona.edu")
+      expect(@js_from_file).to have_sent_email.to("kfsbsa@list.arizona.edu")
     end
   end
 end

@@ -8,24 +8,24 @@ describe Rhubarb::LogRoller, '.new' do
   end
 
   it 'should abandon ship without $BATCH_HOME' do
-    Rhubarb.stub(:batch_home).and_return(nil)
+    allow(Rhubarb).to receive(:batch_home).and_return(nil)
     expect { Rhubarb::LogRoller.new }.to raise_error(Rhubarb::MissingBatchHomeError)
   end
 
   it 'should abandon ship with an invalid $BATCH_HOME' do
     batch_home = File.join(@live_dir, 'uaf-fake')
-    Rhubarb.stub(:batch_home).and_return(batch_home)
+    allow(Rhubarb).to receive(:batch_home).and_return(batch_home)
     expect { Rhubarb::LogRoller.new }.to raise_error(Rhubarb::InvalidBatchHomeError)
   end
 
   it 'should abandon ship with an empty $BATCH_HOME directory' do
     batch_home = File.join(@live_dir, 'uaf-tst')
-    Rhubarb.stub(:batch_home).and_return(batch_home)
+    allow(Rhubarb).to receive(:batch_home).and_return(batch_home)
     expect { Rhubarb::LogRoller.new }.to raise_error(Rhubarb::EmptyBatchHomeError)
   end
 
   it 'should initialize successfully' do
-    Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+    allow(Rhubarb).to receive(:batch_home).and_return(@stg_batch_home)
     expect { Rhubarb::LogRoller.new }.to_not raise_error
   end
 end
@@ -36,7 +36,7 @@ describe Rhubarb::LogRoller, '#roll' do
   before(:each) do
     cleanse_live
 
-    Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+    allow(Rhubarb).to receive(:batch_home).and_return(@stg_batch_home)
     @logger01 = Rhubarb::Logger.new('foo')
     @logger02 = Rhubarb::Logger.new('bar')
     @message01 = 'Ridiculously Interesting Message'
@@ -57,22 +57,22 @@ describe Rhubarb::LogRoller, '#roll' do
     end
 
     it 'should roll log files out of the way' do
-      Dir.glob(File.join(@stg_batch_home, 'logs', '*.log')).should be_empty
+      expect(Dir.glob(File.join(@stg_batch_home, 'logs', '*.log'))).to be_empty
     end
 
     it 'should roll log files into their archive location' do
-      File.directory?(File.join(@stg_batch_home, 'logs', 'foo')).should be_true
-      File.directory?(File.join(@stg_batch_home, 'logs', 'bar')).should be_true
+      expect(File.directory?(File.join(@stg_batch_home, 'logs', 'foo'))).to be true
+      expect(File.directory?(File.join(@stg_batch_home, 'logs', 'bar'))).to be true
     end
 
     it 'should keep log files correct' do
       last_foo_log = Dir.glob(File.join(@stg_batch_home, 'logs', 'foo', '*.log')).last
       lines = File.readlines(last_foo_log)
-      lines.last.should match /[0-9:]{8} \(INFO\) #{@message01}/
+      expect(lines.last).to match /[0-9:]{8} \(INFO\) #{@message01}/
 
       last_bar_log = Dir.glob(File.join(@stg_batch_home, 'logs', 'bar', '*.log')).last
       lines = File.readlines(last_bar_log)
-      lines.last.should match /[0-9:]{8} \(INFO\) #{@message01}/
+      expect(lines.last).to match /[0-9:]{8} \(INFO\) #{@message01}/
     end
   end
 
@@ -111,15 +111,15 @@ describe Rhubarb::LogRoller, '#roll' do
     end
 
     foo_archives = Dir.glob(File.join(@stg_batch_home, 'logs', 'foo', '*.log'))
-    foo_archives.should include_something_like /foo_2012-08-31.log$/
-    foo_archives.should include_something_like /foo_2012-09-01.log$/
-    foo_archives.should include_something_like /foo_2012-09-02.log$/
-    foo_archives.should_not include_something_like /foo_2012-09-03.log$/
+    expect(foo_archives).to include_something_like /foo_2012-08-31.log$/
+    expect(foo_archives).to include_something_like /foo_2012-09-01.log$/
+    expect(foo_archives).to include_something_like /foo_2012-09-02.log$/
+    expect(foo_archives).not_to include_something_like /foo_2012-09-03.log$/
 
     bar_archives = Dir.glob(File.join(@stg_batch_home, 'logs', 'bar', '*.log'))
-    bar_archives.should include_something_like /bar_2012-08-31.log$/
-    bar_archives.should include_something_like /bar_2012-09-01.log$/
-    bar_archives.should include_something_like /bar_2012-09-02.log$/
-    bar_archives.should_not include_something_like /bar_2012-09-03.log$/
+    expect(bar_archives).to include_something_like /bar_2012-08-31.log$/
+    expect(bar_archives).to include_something_like /bar_2012-09-01.log$/
+    expect(bar_archives).to include_something_like /bar_2012-09-02.log$/
+    expect(bar_archives).not_to include_something_like /bar_2012-09-03.log$/
   end
 end

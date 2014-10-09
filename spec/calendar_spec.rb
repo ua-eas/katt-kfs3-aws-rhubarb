@@ -5,7 +5,7 @@ describe Rhubarb::Calendar, "#event_from_log_lines" do
 
   before(:each) do
     cleanse_live
-    Rhubarb.stub(:batch_home).and_return(@stg_batch_home)
+    allow(Rhubarb).to receive(:batch_home).and_return(@stg_batch_home)
 
     @cal = Rhubarb::Calendar.new
     lines = <<LOGLINES
@@ -23,14 +23,14 @@ LOGLINES
   end
 
   it "should create an iCalendar event for a single job execution with a correct summary" do
-    @event.summary.should =~ /processPdpCancelsAndPaidJob/
+    expect(@event.summary).to be =~ /processPdpCancelsAndPaidJob/
   end
 
   it "should create an iCalendar event for a single job execution with a correct dtstart" do
-    @event.dtstart.should == DateTime.new(2012, 10, 25, 6, 50, 06)
+    expect(@event.dtstart).to be == DateTime.new(2012, 10, 25, 6, 50, 06)
   end
 
   it "should create an iCalendar event for a single job execution with a correct dtend" do
-    @event.dtend.should   == DateTime.new(2012, 10, 25, 6, 56, 03)
+    expect(@event.dtend).to be == DateTime.new(2012, 10, 25, 6, 56, 03)
   end
 end
