@@ -19,6 +19,7 @@ outputs:
     to:
     - SCOTT_SKINNER_ADDRESS
     - JOSH_SHALOO_ADDRESS
+    cc:
     attachment_dirs:
     - /home/u00/env/kfs/opt/work/dev/kfs/reports/foo
     attachments:
@@ -32,6 +33,9 @@ outputs:
     to:
     - SCOTT_SKINNER_ADDRESS
     - JOSH_SHALOO_ADDRESS
+    cc:
+    - ROBERT_HUNTER_ADDRESS
+    - HEATHER_LO_ADDRESS
     attachment_dirs:
     - /home/u00/env/kfs/opt/work/dev/kfs/logs/foo
     attachments:
