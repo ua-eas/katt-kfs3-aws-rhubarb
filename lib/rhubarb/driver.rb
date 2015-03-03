@@ -27,7 +27,7 @@ class Rhubarb::Driver
       raise Rhubarb::MissingControlDirectoryError
     end
 
-    @status_timeout = 3.hours
+    @status_timeout = 90.minutes
     @status_sleep = 5.seconds
 
     debug "batch_home:        #{Rhubarb.batch_home.inspect}"
