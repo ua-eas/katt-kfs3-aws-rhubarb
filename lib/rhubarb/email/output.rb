@@ -57,6 +57,14 @@ class Rhubarb::Email::Output < Mail::Message
     end
     self['to']         = recipients.join(',')
 
+    if @config['cc']
+      carboncopies     = []
+      @config['cc'].each do |key|
+        carboncopies << Rhubarb::Email.addresses[key]
+      end
+      self['cc']       = carboncopies.join(',')
+    end
+
     if @config['attachment_dirs'] && @config['attachments']
 
       @attachment_dirs = @config['attachment_dirs']

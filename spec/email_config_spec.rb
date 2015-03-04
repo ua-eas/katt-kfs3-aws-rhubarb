@@ -63,6 +63,8 @@ describe Rhubarb::Email, "#parse_config" do
   it "should generate Output with correct to entries" do
     expect(@js.outputs['job_ok']['to'].to_s).to include("katt-automation@list.arizona.edu")
     expect(@js.outputs['job_ok']['to'].to_s).to include("shaloo@email.arizona.edu")
+    expect(@js.outputs['job_ok']['cc'].to_s).to include("rhunter@email.arizona.edu")
+    expect(@js.outputs['job_ok']['cc'].to_s).to include("hlo@email.arizona.edu")
     expect(@js.outputs['job_not_ok']['to'].to_s).to include("katt-automation@list.arizona.edu")
     expect(@js.outputs['job_not_ok']['to'].to_s).to include("shaloo@email.arizona.edu")
   end

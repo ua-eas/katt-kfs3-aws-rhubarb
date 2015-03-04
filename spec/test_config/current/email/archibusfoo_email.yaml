@@ -10,6 +10,7 @@ outputs:
     to: 
     - KATT_AUTOMATION_ADDRESS
     - JOSH_SHALOO_ADDRESS
+    cc:
     attachment_dirs:
     - BATCH_HOME/reports/fooeinvoice
     attachments:
@@ -21,6 +22,9 @@ outputs:
     to: 
     - KATT_AUTOMATION_ADDRESS
     - JOSH_SHALOO_ADDRESS
+    cc:
+    - ROBERT_HUNTER_ADDRESS
+    - HEATHER_LO_ADDRESS
     attachment_dirs:
     - BATCH_HOME/reports/fooeinvoice
     attachments:
