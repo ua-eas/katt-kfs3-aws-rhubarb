@@ -7,5 +7,5 @@ set :stage, :trn
 # unless any hosts have the primary property set.
 role :app, "kualiadm@uaz-kf-a06.mosaic.arizona.edu"
 
-#deploy the latest tag
-set :branch, `git tag`.split("\n").last
+#deploy the latest tag using natural sorting because we are not using Git 2.x
+set :branch, `git tag | sort -V`.split("\n").last
