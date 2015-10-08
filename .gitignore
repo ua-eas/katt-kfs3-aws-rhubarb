@@ -3,3 +3,4 @@ spec/live/*
 .yardoc
 doc
 .bundle
+logs
