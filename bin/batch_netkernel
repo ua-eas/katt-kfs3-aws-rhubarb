@@ -9,6 +9,7 @@ class BatchNetKernelRunner < Thor
   def notify(uri)
     netkernel = Rhubarb::NetKernel.new(uri)
     result = netkernel.notify
+    puts result
     exit netkernel.succeeded?(result) ? 0 : 1
   end
 end

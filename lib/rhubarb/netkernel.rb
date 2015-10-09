@@ -12,14 +12,7 @@ class Rhubarb::NetKernel
   # Examples: kfsjpmccardholder, kfsjpmctransaction
   #
   def initialize(uri)
-    # Rhubarb.validate_batch_home
-
     @parsed_uri = URI.parse(uri)
-  end
-
-  # Memoized getter for `@batch_home` (source is {Rhubarb.batch\_home})
-  def batch_home
-    @batch_home ||= Rhubarb.batch_home
   end
 
   def notify
