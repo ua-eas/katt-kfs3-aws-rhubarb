@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+require 'thor'
+
+require File.join(File.dirname(File.expand_path(__FILE__)), '..', 'lib', 'rhubarb')
+
+class BatchNetKernelRunner < Thor
+  desc 'notify URI' , 'Notify NetKernel that URI must be transformed (ex: notify http://uaz-so-w02.mosaic.arizona.edu:8080/kfsjpmctransaction).'
+
+  def notify(uri)
+    netkernel = Rhubarb::NetKernel.new(uri)
+    result = netkernel.notify
+    puts result
+    exit netkernel.succeeded?(result) ? 0 : 1
+  end
+end
+
+BatchNetKernelRunner.start
