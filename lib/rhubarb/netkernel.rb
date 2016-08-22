@@ -4,19 +4,25 @@ class Rhubarb::NetKernel
   require 'net/http'
   require 'uri'
 
-  attr_accessor :logger, :status_timeout, :status_sleep, :parsed_uri
+  attr_accessor :logger, :status_timeout, :status_sleep, :parsed_uri, :username, :password
 
   delegate :debug, :info, :warn, :error, :fatal, :log_to_stdout, to: :@logger
 
-  # Rhubarb::NetKernel must be initialized with a pathname.
+  # Rhubarb::NetKernel must be initialized with a pathname and credentials.
   # Examples: kfsjpmccardholder, kfsjpmctransaction
   #
-  def initialize(uri)
+  def initialize(uri, username, password)
     @parsed_uri = URI.parse(uri)
+    @username = username
+    @password = password
   end
 
   def notify
-    response = Net::HTTP.get_response(@parsed_uri)
+    req = Net::HTTP::Get.new(@parsed_uri)
+    req.basic_auth @username, @password
+    response = Net::HTTP.start(@parsed_uri.hostname, @parsed_uri.port) {|http|
+      http.request(req)
+    }
     response.body
   end
 
