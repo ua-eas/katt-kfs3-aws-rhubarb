@@ -4,7 +4,7 @@ class Rhubarb::NetKernel
   require 'net/http'
   require 'uri'
 
-  attr_accessor :logger, :status_timeout, :status_sleep, :parsed_uri
+  attr_accessor :logger, :status_timeout, :status_sleep, :parsed_uri, :username, :password
 
   delegate :debug, :info, :warn, :error, :fatal, :log_to_stdout, to: :@logger
 
