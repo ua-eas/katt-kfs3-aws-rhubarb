@@ -5,7 +5,7 @@ describe Rhubarb::NetKernel, '.new' do
 
   before(:all) do
     cleanse_live
-    @netkernel = Rhubarb::NetKernel.new('http://uaz-so-w02.mosaic.arizona.edu:8080/kfsjpmccardholder')
+    @netkernel = Rhubarb::NetKernel.new('http://uaz-so-w02.mosaic.arizona.edu:8080/kfsjpmccardholder','username','password')
   end
 
   it 'should initialize successfully' do
@@ -20,7 +20,7 @@ describe Rhubarb::NetKernel, '#succeeded?' do
   before(:each) do
     cleanse_live
 
-    @netkernel = Rhubarb::NetKernel.new('http://uaz-so-w02.mosaic.arizona.edu:8080/kfsjpmccardholder')
+    @netkernel = Rhubarb::NetKernel.new('http://uaz-so-w02.mosaic.arizona.edu:8080/kfsjpmccardholder','username','password')
   end
 
   it 'should return true if #notify returns "a.txt: a.xml"' do
@@ -50,7 +50,7 @@ describe Rhubarb::NetKernel, '#notify?' do
   before(:each) do
     cleanse_live
 
-    @netkernel = Rhubarb::NetKernel.new('http://google.com')
+    @netkernel = Rhubarb::NetKernel.new('http://google.com','username','password')
   end
 
   it 'should return a string' do
