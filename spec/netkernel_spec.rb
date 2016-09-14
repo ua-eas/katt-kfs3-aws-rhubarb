@@ -23,14 +23,6 @@ describe Rhubarb::NetKernel, '#succeeded?' do
     @netkernel = Rhubarb::NetKernel.new('http://uaz-so-w02.mosaic.arizona.edu:8080/kfsjpmccardholder','username','password')
   end
 
-  it 'should return a string' do
-    expect(@netkernel.notify).to be_a String
-  end
-
-  it 'should have a nonzero length' do
-    expect(@netkernel.notify.length).to be > 0
-  end
-
   it 'should return true if #notify returns "a.txt: a.xml"' do
     expect(@netkernel.succeeded? "a.txt: a.xml").to be true
   end
@@ -50,4 +42,23 @@ describe Rhubarb::NetKernel, '#succeeded?' do
   it 'should return true if #notify returns nothing at all' do
     expect(@netkernel.succeeded? "").to be true
   end
+end
+
+describe Rhubarb::NetKernel, '#notify?' do
+  include Helpers
+
+  before(:each) do
+    cleanse_live
+
+    @netkernel = Rhubarb::NetKernel.new('http://uaz-so-w02.mosaic.arizona.edu:8080/kfsjpmccardholder','username','password')
+  end
+
+  it 'should return a string' do
+    expect(@netkernel.notify).to be_a String
+  end
+
+  it 'should have a nonzero length' do
+    expect(@netkernel.notify.length).to be > 0
+  end
+
 end
