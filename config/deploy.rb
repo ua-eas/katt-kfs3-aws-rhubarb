@@ -1,5 +1,5 @@
 set :application, 'Rhubarb'
-set :repo_url, 'https://github.com/ua-eas/katt-kfs-rhubarb.git'
+set :repo_url, 'https://github.com/ua-eas/katt-kfs3-aws-rhubarb.git'
 
 #ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
