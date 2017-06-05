@@ -19,7 +19,7 @@ class Rhubarb::Email::GlobFileFilter < Rhubarb::Email::FileFilterBase
         
         debug "checking for files matching " + glob
 
-        Dir.glob(File.join(parsed_dir_string, glob)).each do |file|
+        Dir.glob(File.join(parsed_dir_string, glob), File::FNM_CASEFOLD).each do |file|
 
           debug "found attachment: " + file
 
