@@ -2,5 +2,5 @@ set :stage, :stg
 
 role :app, %w{ssh-user@localhost:22}
 
-# set :rails_env, :stg
+# Deploy the master branch since we aren't doing tagged releases (for simplicity)
 set :branch, 'master'
